@@ -1,0 +1,23 @@
+{
+  "projectName": "devwmu",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "pnpm",
+  "tailwind": true,
+  "addOnOptions": {
+    "prisma": {
+      "database": "postgres"
+    }
+  },
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "eslint",
+    "nitro",
+    "prisma",
+    "shadcn",
+    "table",
+    "better-auth"
+  ]
+}
