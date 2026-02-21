@@ -10,7 +10,7 @@
     "db:stage": "prisma migrate dev --create-only",
     "db:commit": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "dotenv -e .env -- tsx prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset",
     "preview": "vite preview",
     "test": "vitest run",
