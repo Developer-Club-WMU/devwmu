@@ -4,7 +4,7 @@ import { LogIn } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { useState } from 'react'
 
-export const Route = createFileRoute('/sign-in')({
+export const Route = createFileRoute('/sign-in/')({
   component: SignIn,
 })
 
