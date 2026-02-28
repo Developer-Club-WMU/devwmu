@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Terminal,
 } from 'lucide-react'
+import { navigationConfig } from '@/config/navigation'
 
 export const Route = createFileRoute('/_public/')({ component: App })
 
@@ -170,6 +171,26 @@ function App() {
               Dev Club WMU
             </span>
           </div>
+
+          <div className="flex items-center justify-center gap-6 mb-6 relative z-10">
+            {navigationConfig.public.social.map((social, index) => {
+              if (!social.icon) return null
+              const Icon = social.icon
+              return (
+                <a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-wmu-gold transition-colors hover:scale-110 transform duration-200"
+                  aria-label={social.title}
+                >
+                  <Icon className="w-6 h-6" />
+                </a>
+              )
+            })}
+          </div>
+
           <p className="text-slate-600 text-xs font-semibold uppercase tracking-wider">
             &copy; {new Date().getFullYear()} Developer Club Western Michigan
             University.
