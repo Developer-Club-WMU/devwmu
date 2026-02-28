@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Terminal, Settings, User } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
+import { navigationConfig } from '@/config/navigation'
 import { Button } from './ui/button'
 
 export function AppHeader() {
@@ -14,26 +15,16 @@ export function AppHeader() {
           </span>
         </Link>
 
-        {/* Navigation links could go here if added later */}
         <nav className="flex-1 flex items-center gap-6 text-sm font-medium">
-          <Link
-            to="/app"
-            className="transition-colors hover:text-foreground/80 text-foreground"
-          >
-            Overview
-          </Link>
-          <Link
-            to="/app"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Members
-          </Link>
-          <Link
-            to="/app"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Events
-          </Link>
+          {navigationConfig.app.mainNav.map((item, index) => (
+            <Link
+              key={index}
+              to={item.href}
+              className="transition-colors hover:text-foreground/80 text-foreground/60 [&.active]:text-foreground"
+            >
+              {item.title}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">

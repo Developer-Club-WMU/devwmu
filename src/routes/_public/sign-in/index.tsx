@@ -3,9 +3,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogIn } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { useState } from 'react'
+import { assertSessionFn } from '@/server/helpers/route-protection'
 
 export const Route = createFileRoute('/_public/sign-in/')({
   component: SignIn,
+  beforeLoad: () => assertSessionFn(),
 })
 
 function SignIn() {

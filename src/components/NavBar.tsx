@@ -11,6 +11,8 @@ import {
 import { Terminal } from 'lucide-react'
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { navigationConfig } from '@/config/navigation'
+import type { NavGroup, NavItem } from '@/config/navigation'
 
 export function NavBar() {
   return (
@@ -25,84 +27,104 @@ export function NavBar() {
 
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link
-                to="/"
-                className={
-                  navigationMenuTriggerStyle() +
-                  ' bg-transparent text-gray-300 hover:text-wmu-gold hover:bg-wmu-brown/50 text-sm uppercase tracking-wider font-semibold'
-                }
-              >
-                Home
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent text-gray-300 hover:text-wmu-gold hover:bg-wmu-brown/50 text-sm uppercase tracking-wider font-semibold">
-                Communities
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-slate-900 border-slate-800">
-                  <li className="row-span-3">
-                    <NavigationMenuLink asChild>
-                      <a
-                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-wmu-brown/50 to-wmu-brown p-6 no-underline outline-none focus:shadow-md border border-wmu-brown hover:border-wmu-gold/50 transition-colors group"
-                        href="/"
-                      >
-                        <Terminal className="h-6 w-6 text-wmu-gold mb-2 transition-transform group-hover:scale-110 group-hover:text-white" />
-                        <div className="mb-2 mt-4 text-lg font-bold uppercase tracking-tight text-white group-hover:text-wmu-gold">
-                          Dev Club WMU
-                        </div>
-                        <p className="text-sm leading-tight text-gray-400">
-                          Learn software engineering skills hands-on with real
-                          projects.
-                        </p>
-                      </a>
-                    </NavigationMenuLink>
-                  </li>
-                  <ListItem href="#web" title="Web Dev">
-                    Build modern web applications and frontend experiences.
-                  </ListItem>
-                  <ListItem href="#app" title="App Dev">
-                    Create mobile applications for iOS and Android.
-                  </ListItem>
-                  <ListItem href="#systems" title="Systems">
-                    Dive deep into low-level programming and infrastructure.
-                  </ListItem>
-                  <ListItem href="#games" title="Game Dev">
-                    Design and develop interactive game experiences.
-                  </ListItem>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <a
-                href="#"
-                className={
-                  navigationMenuTriggerStyle() +
-                  ' bg-transparent text-gray-300 hover:text-wmu-gold hover:bg-wmu-brown/50 text-sm uppercase tracking-wider font-semibold'
-                }
-              >
-                Events
-              </a>
-            </NavigationMenuItem>
+            {navigationConfig.public.mainNav.map((item, index) => {
+              if ('items' in item) {
+                const group = item as NavGroup
+                return (
+                  <NavigationMenuItem key={index}>
+                    <NavigationMenuTrigger className="bg-transparent text-gray-300 hover:text-wmu-gold hover:bg-wmu-brown/50 text-sm uppercase tracking-wider font-semibold">
+                      {group.title}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-slate-900 border-slate-800">
+                        <li className="row-span-3">
+                          <NavigationMenuLink asChild>
+                            <a
+                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-wmu-brown/50 to-wmu-brown p-6 no-underline outline-none focus:shadow-md border border-wmu-brown hover:border-wmu-gold/50 transition-colors group"
+                              href="/"
+                            >
+                              <Terminal className="h-6 w-6 text-wmu-gold mb-2 transition-transform group-hover:scale-110 group-hover:text-white" />
+                              <div className="mb-2 mt-4 text-lg font-bold uppercase tracking-tight text-white group-hover:text-wmu-gold">
+                                Dev Club WMU
+                              </div>
+                              <p className="text-sm leading-tight text-gray-400">
+                                Learn software engineering skills hands-on with
+                                real projects.
+                              </p>
+                            </a>
+                          </NavigationMenuLink>
+                        </li>
+                        {group.items.map((subItem, subIndex) => (
+                          <ListItem
+                            key={subIndex}
+                            href={subItem.href}
+                            title={subItem.title}
+                          >
+                            {subItem.description}
+                          </ListItem>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                )
+              }
+
+              const navItem = item as NavItem
+              return (
+                <NavigationMenuItem key={index}>
+                  {navItem.href.startsWith('/') &&
+                  !navItem.href.includes('#') ? (
+                    <Link
+                      to={navItem.href}
+                      className={
+                        navigationMenuTriggerStyle() +
+                        ' bg-transparent text-gray-300 hover:text-wmu-gold hover:bg-wmu-brown/50 text-sm uppercase tracking-wider font-semibold'
+                      }
+                    >
+                      {navItem.title}
+                    </Link>
+                  ) : (
+                    <a
+                      href={navItem.href}
+                      className={
+                        navigationMenuTriggerStyle() +
+                        ' bg-transparent text-gray-300 hover:text-wmu-gold hover:bg-wmu-brown/50 text-sm uppercase tracking-wider font-semibold'
+                      }
+                    >
+                      {navItem.title}
+                    </a>
+                  )}
+                </NavigationMenuItem>
+              )
+            })}
           </NavigationMenuList>
         </NavigationMenu>
 
         <div className="flex items-center gap-4">
-          <Link
-            to="/sign-in"
-            className="hidden md:inline-flex px-6 py-2.5 bg-transparent border border-wmu-gold hover:bg-wmu-gold/10 text-wmu-gold text-sm font-bold uppercase tracking-wider rounded transition-colors shadow-[0_0_15px_rgba(246,200,78,0.1)] hover:shadow-[0_0_25px_rgba(246,200,78,0.2)] items-center justify-center"
-          >
-            Sign In
-          </Link>
-          <a
-            href="https://discord.gg/wmu-dev-club"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:inline-flex px-6 py-2.5 bg-wmu-gold hover:bg-wmu-gold/90 text-wmu-brown text-sm font-bold uppercase tracking-wider rounded transition-colors shadow-[0_0_15px_rgba(246,200,78,0.3)] hover:shadow-[0_0_25px_rgba(246,200,78,0.5)] items-center justify-center"
-          >
-            Join Discord
-          </a>
+          {navigationConfig.public.cta.map((cta, index) => {
+            if (cta.external) {
+              return (
+                <a
+                  key={index}
+                  href={cta.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden md:inline-flex px-6 py-2.5 bg-wmu-gold hover:bg-wmu-gold/90 text-wmu-brown text-sm font-bold uppercase tracking-wider rounded transition-colors shadow-[0_0_15px_rgba(246,200,78,0.3)] hover:shadow-[0_0_25px_rgba(246,200,78,0.5)] items-center justify-center"
+                >
+                  {cta.title}
+                </a>
+              )
+            }
+            return (
+              <Link
+                key={index}
+                to={cta.href}
+                className="hidden md:inline-flex px-6 py-2.5 bg-transparent border border-wmu-gold hover:bg-wmu-gold/10 text-wmu-gold text-sm font-bold uppercase tracking-wider rounded transition-colors shadow-[0_0_15px_rgba(246,200,78,0.1)] hover:shadow-[0_0_25px_rgba(246,200,78,0.2)] items-center justify-center"
+              >
+                {cta.title}
+              </Link>
+            )
+          })}
         </div>
       </div>
     </header>
