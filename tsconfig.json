@@ -4,7 +4,7 @@
     "**/*.tsx",
     "eslint.config.js",
     "prettier.config.js",
-    "vite.config.js",
+    "vite.config.js"
   ],
 
   "compilerOptions": {
@@ -29,14 +29,14 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     /* Plugin */
     "plugins": [
       {
-        "name": "@effect/language-service",
-      },
-    ],
+        "name": "@effect/language-service"
+      }
+    ]
   },
-  "exclude": ["dist/", "docs/"],
+  "exclude": ["dist/", "docs/"]
 }

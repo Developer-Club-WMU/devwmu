@@ -90,6 +90,8 @@ code {
 }
 
 @theme inline {
+  --color-wmu-brown: #4e3022;
+  --color-wmu-gold: #f6c84e;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

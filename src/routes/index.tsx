@@ -1,118 +1,181 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { CommunityCard } from '@/components/CommunityCard'
 import {
-  Zap,
+  Globe,
+  Smartphone,
   Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
-  Sparkles,
+  Gamepad2,
+  ChevronRight,
+  Terminal,
 } from 'lucide-react'
 
 export const Route = createFileRoute('/')({ component: App })
 
-function App() {
-  const features = [
-    {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Powerful Server Functions',
-      description:
-        'Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.',
-    },
-    {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: 'Flexible Server Side Rendering',
-      description:
-        'Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.',
-    },
-    {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: 'API Routes',
-      description:
-        'Build type-safe API endpoints alongside your application. No separate backend needed.',
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Strongly Typed Everything',
-      description:
-        'End-to-end type safety from server to client. Catch errors before they reach production.',
-    },
-    {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Streaming Support',
-      description:
-        'Stream data from server to client progressively. Perfect for AI applications and real-time updates.',
-    },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: 'Next Generation Ready',
-      description:
-        'Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.',
-    },
-  ]
+const communities = [
+  {
+    id: 'web',
+    name: 'Web.Dev',
+    description:
+      'Master modern frontend and backend web technologies. Build responsive, accessible, and performant web applications using React, Node.js, and more.',
+    icon: <Globe className="w-6 h-6" />,
+    bgImage:
+      'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop', // Code on screen
+    ctaUrl: '#web',
+  },
+  {
+    id: 'app',
+    name: 'App.Dev',
+    description:
+      'Create native and cross-platform mobile experiences. Learn iOS, Android, Flutter, and React Native development from the ground up.',
+    icon: <Smartphone className="w-6 h-6" />,
+    bgImage:
+      'https://images.unsplash.com/photo-1526498460520-4c246339dccb?q=80&w=2070&auto=format&fit=crop', // Phone app code
+    ctaUrl: '#app',
+  },
+  {
+    id: 'systems',
+    name: 'Sys.Dev',
+    description:
+      'Dive deep into low-level programming, infrastructure, and cloud computing. Explore Linux, Rust, DevOps, and scalable systems architecture.',
+    icon: <Server className="w-6 h-6" />,
+    bgImage:
+      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop', // Server racks
+    ctaUrl: '#systems',
+  },
+  {
+    id: 'games',
+    name: 'Game.Dev',
+    description:
+      'Design and develop interactive experiences. Craft gameplay mechanics, render graphics, and build immersive worlds using Unity and Unreal Engine.',
+    icon: <Gamepad2 className="w-6 h-6" />,
+    bgImage:
+      'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop', // Gaming setup / controller
+    ctaUrl: '#games',
+  },
+]
 
+function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
+    <div className="min-h-screen bg-slate-950 font-sans selection:bg-wmu-gold/30">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[85vh] flex items-center border-b border-slate-900">
+        {/* Dark moody background with abstract gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/10 via-slate-950 to-slate-950"></div>
+        <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
+
+        {/* Abstract atmospheric glow */}
+        <div className="absolute -top-[30%] -right-[10%] w-[70%] h-[70%] rounded-full bg-cyan-900/20 blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-900/10 blur-[100px] pointer-events-none"></div>
+
+        <div className="container relative mx-auto px-6 max-w-7xl">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-wmu-brown/40 border border-wmu-brown text-wmu-gold text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md shadow-lg shadow-wmu-brown/20">
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Forging Engineers</span>
+            </div>
+
+            <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-[0.9] mb-6 drop-shadow-2xl">
+              Code.{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-wmu-gold to-white">
+                Create.
               </span>
+              <br />
+              Conquer.
             </h1>
-          </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
+
+            <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl font-medium leading-relaxed">
+              The Developer Club WMU is an elite student organization dedicated
+              to building software engineers through hands-on projects,
+              workshops, and competitive development.
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+              <a
+                href="#communities"
+                className="group relative inline-flex items-center justify-center px-8 py-4 font-bold uppercase tracking-widest text-wmu-brown bg-wmu-gold overflow-hidden transition-all shadow-[0_0_20px_rgba(246,200,78,0.4)] hover:shadow-[0_0_40px_rgba(246,200,78,0.6)]"
+              >
+                <div className="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                <span className="relative">Choose Your Path</span>
+                <ChevronRight className="relative ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+
+                {/* Decorative border cut */}
+                <div className="absolute top-0 right-0 border-t-[8px] border-l-[8px] border-t-slate-950 border-l-transparent"></div>
+                <div className="absolute bottom-0 left-0 border-b-[8px] border-r-[8px] border-b-slate-950 border-r-transparent"></div>
+              </a>
+
+              <a
+                href="https://discord.gg/wmu-dev-club"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center justify-center px-8 py-4 font-bold uppercase tracking-widest text-wmu-gold bg-slate-900 border border-wmu-brown hover:border-wmu-gold transition-colors"
+              >
+                <span className="relative z-10">Join Discord</span>
+                <div className="absolute inset-0 bg-wmu-gold/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
+      {/* Communities Section */}
+      <section
+        id="communities"
+        className="py-24 bg-slate-950 relative border-t border-slate-900"
+      >
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 relative z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 mb-4">
+                <div className="w-8 h-[2px] bg-wmu-gold"></div>
+                <span className="text-wmu-gold font-bold uppercase tracking-widest text-sm">
+                  Specializations
+                </span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">
+                Our{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-wmu-brown via-wmu-gold to-white">
+                  Factions
+                </span>
+              </h2>
+              <p className="text-gray-400 max-w-xl font-medium">
+                Join specialized communities focused on different areas of
+                software engineering. Learn, build, and level up together.
               </p>
             </div>
-          ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative z-10">
+            {communities.map((community) => (
+              <CommunityCard
+                key={community.id}
+                name={community.name}
+                description={community.description}
+                icon={community.icon}
+                bgImage={community.bgImage}
+                ctaUrl={community.ctaUrl}
+              />
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-slate-900 bg-slate-950 text-center relative overflow-hidden">
+        {/* Glow effect for footer */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[50%] h-[100px] bg-wmu-brown/20 blur-[50px] pointer-events-none"></div>
+        <div className="container relative mx-auto px-6 z-10">
+          <div className="flex items-center justify-center gap-2 mb-6 opacity-50 hover:opacity-100 transition-opacity">
+            <Terminal className="w-5 h-5 text-wmu-gold" />
+            <span className="text-sm font-black text-wmu-gold tracking-widest uppercase">
+              Dev Club WMU
+            </span>
+          </div>
+          <p className="text-slate-600 text-xs font-semibold uppercase tracking-wider">
+            &copy; {new Date().getFullYear()} Developer Club Western Michigan
+            University.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }
