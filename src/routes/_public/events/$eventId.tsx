@@ -2,6 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getPublicEventByIdFn } from '@/server/core/handlers/public/get-public-event-by-id.handler'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
 import { format } from 'date-fns'
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react'
@@ -68,11 +69,19 @@ function PublicEventDetailsPage() {
         </div>
       </div>
 
-      <div className="prose prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-a:text-wmu-gold hover:prose-a:text-wmu-gold/80 prose-img:rounded-xl">
+      <div className="mt-8">
         {event.content ? (
-          <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
-            {event.content}
-          </ReactMarkdown>
+          <div
+            data-color-mode="dark"
+            className="prose prose-invert max-w-none prose-headings:text-white prose-headings:font-black prose-headings:uppercase prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-wmu-gold hover:prose-a:text-wmu-gold/80"
+          >
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeSanitize]}
+            >
+              {event.content}
+            </ReactMarkdown>
+          </div>
         ) : (
           <div className="text-slate-500 italic p-8 border border-slate-800 bg-slate-900/30 rounded-xl backdrop-blur-sm text-center">
             Check back later for full event details!

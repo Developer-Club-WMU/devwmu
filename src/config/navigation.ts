@@ -36,33 +36,33 @@ export const navigationConfig: NavigationConfig = {
         title: 'About',
         href: '/#about',
       },
-      {
-        title: 'Communities',
-        items: [
-          {
-            title: 'Web Dev',
-            href: '/#web',
-            description:
-              'Build modern web applications and frontend experiences.',
-          },
-          {
-            title: 'App Dev',
-            href: '/#app',
-            description: 'Create mobile applications for iOS and Android.',
-          },
-          {
-            title: 'Systems',
-            href: '/#systems',
-            description:
-              'Dive deep into low-level programming and infrastructure.',
-          },
-          {
-            title: 'Game Dev',
-            href: '/#games',
-            description: 'Design and develop interactive game experiences.',
-          },
-        ],
-      },
+      // {
+      //   title: 'Communities',
+      //   items: [
+      //     {
+      //       title: 'Web Dev',
+      //       href: '/#web',
+      //       description:
+      //         'Build modern web applications and frontend experiences.',
+      //     },
+      //     {
+      //       title: 'App Dev',
+      //       href: '/#app',
+      //       description: 'Create mobile applications for iOS and Android.',
+      //     },
+      //     {
+      //       title: 'Systems',
+      //       href: '/#systems',
+      //       description:
+      //         'Dive deep into low-level programming and infrastructure.',
+      //     },
+      //     {
+      //       title: 'Game Dev',
+      //       href: '/#games',
+      //       description: 'Design and develop interactive game experiences.',
+      //     },
+      //   ],
+      // },
       {
         title: 'Events',
         href: '/events',

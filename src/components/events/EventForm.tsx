@@ -3,6 +3,7 @@ import { zodValidator } from '@tanstack/zod-form-adapter'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import {
@@ -13,6 +14,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DateTimePicker } from '@/components/ui/datetime-picker'
+import MDEditor from '@uiw/react-md-editor'
+import remarkGfm from 'remark-gfm'
 import { upsertEventSchema } from '@/server/core/handlers/app/upsert-event.handler'
 import { z } from 'zod'
 import { EventStatus } from 'generated/enums'
@@ -166,15 +169,23 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
         children={(field) => (
           <div className="space-y-2">
             <Label htmlFor={field.name}>Markdown Content</Label>
-            <Textarea
-              id={field.name}
-              value={field.state.value ?? ''}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="## Hackathon Details\n\nWrite the full event text here utilizing Markdown formatting."
-              className="resize-y font-mono"
-              rows={10}
-            />
+            <Card className="overflow-hidden border-slate-800">
+              <CardContent className="p-0">
+                <div data-color-mode="dark">
+                  <MDEditor
+                    value={field.state.value ?? ''}
+                    onChange={(val) => field.handleChange(val ?? '')}
+                    height={400}
+                    preview="edit"
+                    className="w-full border-0 !bg-transparent rounded-none"
+                    style={{ backgroundColor: 'transparent' }}
+                    previewOptions={{
+                      remarkPlugins: [remarkGfm],
+                    }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       />
