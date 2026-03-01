@@ -38,6 +38,7 @@ export type EventMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  content: string | null
   location: string | null
   startTime: Date | null
   endTime: Date | null
@@ -53,6 +54,7 @@ export type EventMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  content: string | null
   location: string | null
   startTime: Date | null
   endTime: Date | null
@@ -68,6 +70,7 @@ export type EventCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  content: number
   location: number
   startTime: number
   endTime: number
@@ -93,6 +96,7 @@ export type EventMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  content?: true
   location?: true
   startTime?: true
   endTime?: true
@@ -108,6 +112,7 @@ export type EventMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  content?: true
   location?: true
   startTime?: true
   endTime?: true
@@ -123,6 +128,7 @@ export type EventCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  content?: true
   location?: true
   startTime?: true
   endTime?: true
@@ -225,6 +231,7 @@ export type EventGroupByOutputType = {
   id: string
   title: string
   description: string | null
+  content: string | null
   location: string | null
   startTime: Date
   endTime: Date
@@ -263,6 +270,7 @@ export type EventWhereInput = {
   id?: Prisma.StringFilter<"Event"> | string
   title?: Prisma.StringFilter<"Event"> | string
   description?: Prisma.StringNullableFilter<"Event"> | string | null
+  content?: Prisma.StringNullableFilter<"Event"> | string | null
   location?: Prisma.StringNullableFilter<"Event"> | string | null
   startTime?: Prisma.DateTimeFilter<"Event"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -281,6 +289,7 @@ export type EventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
@@ -302,6 +311,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
   title?: Prisma.StringFilter<"Event"> | string
   description?: Prisma.StringNullableFilter<"Event"> | string | null
+  content?: Prisma.StringNullableFilter<"Event"> | string | null
   location?: Prisma.StringNullableFilter<"Event"> | string | null
   startTime?: Prisma.DateTimeFilter<"Event"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -320,6 +330,7 @@ export type EventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
@@ -343,6 +354,7 @@ export type EventScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Event"> | string
   title?: Prisma.StringWithAggregatesFilter<"Event"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  content?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   startTime?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   endTime?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -358,6 +370,7 @@ export type EventCreateInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -375,6 +388,7 @@ export type EventUncheckedCreateInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -392,6 +406,7 @@ export type EventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -409,6 +424,7 @@ export type EventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,6 +442,7 @@ export type EventCreateManyInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -441,6 +458,7 @@ export type EventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -455,6 +473,7 @@ export type EventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,6 +499,7 @@ export type EventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   location?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
@@ -499,6 +519,7 @@ export type EventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   location?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
@@ -514,6 +535,7 @@ export type EventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   location?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
@@ -620,6 +642,7 @@ export type EventCreateWithoutCreatedByInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -636,6 +659,7 @@ export type EventUncheckedCreateWithoutCreatedByInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -680,6 +704,7 @@ export type EventScalarWhereInput = {
   id?: Prisma.StringFilter<"Event"> | string
   title?: Prisma.StringFilter<"Event"> | string
   description?: Prisma.StringNullableFilter<"Event"> | string | null
+  content?: Prisma.StringNullableFilter<"Event"> | string | null
   location?: Prisma.StringNullableFilter<"Event"> | string | null
   startTime?: Prisma.DateTimeFilter<"Event"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -695,6 +720,7 @@ export type EventCreateWithoutAttendeesInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -711,6 +737,7 @@ export type EventUncheckedCreateWithoutAttendeesInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -743,6 +770,7 @@ export type EventUpdateWithoutAttendeesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -759,6 +787,7 @@ export type EventUncheckedUpdateWithoutAttendeesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -775,6 +804,7 @@ export type EventCreateWithoutEventTagOnEventsInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -791,6 +821,7 @@ export type EventUncheckedCreateWithoutEventTagOnEventsInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -823,6 +854,7 @@ export type EventUpdateWithoutEventTagOnEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -839,6 +871,7 @@ export type EventUncheckedUpdateWithoutEventTagOnEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -855,6 +888,7 @@ export type EventCreateManyCreatedByInput = {
   id?: string
   title: string
   description?: string | null
+  content?: string | null
   location?: string | null
   startTime: Date | string
   endTime: Date | string
@@ -869,6 +903,7 @@ export type EventUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -885,6 +920,7 @@ export type EventUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -901,6 +937,7 @@ export type EventUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -955,6 +992,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   title?: boolean
   description?: boolean
+  content?: boolean
   location?: boolean
   startTime?: boolean
   endTime?: boolean
@@ -974,6 +1012,7 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   title?: boolean
   description?: boolean
+  content?: boolean
   location?: boolean
   startTime?: boolean
   endTime?: boolean
@@ -990,6 +1029,7 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   title?: boolean
   description?: boolean
+  content?: boolean
   location?: boolean
   startTime?: boolean
   endTime?: boolean
@@ -1006,6 +1046,7 @@ export type EventSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  content?: boolean
   location?: boolean
   startTime?: boolean
   endTime?: boolean
@@ -1017,7 +1058,7 @@ export type EventSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "location" | "startTime" | "endTime" | "status" | "capacity" | "isPublic" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "content" | "location" | "startTime" | "endTime" | "status" | "capacity" | "isPublic" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   attendees?: boolean | Prisma.Event$attendeesArgs<ExtArgs>
@@ -1042,6 +1083,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: string
     title: string
     description: string | null
+    content: string | null
     location: string | null
     startTime: Date
     endTime: Date
@@ -1480,6 +1522,7 @@ export interface EventFieldRefs {
   readonly id: Prisma.FieldRef<"Event", 'String'>
   readonly title: Prisma.FieldRef<"Event", 'String'>
   readonly description: Prisma.FieldRef<"Event", 'String'>
+  readonly content: Prisma.FieldRef<"Event", 'String'>
   readonly location: Prisma.FieldRef<"Event", 'String'>
   readonly startTime: Prisma.FieldRef<"Event", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"Event", 'DateTime'>

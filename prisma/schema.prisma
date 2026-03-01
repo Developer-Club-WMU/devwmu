@@ -85,6 +85,7 @@ model Event {
   id          String   @id @default(cuid())
   title       String
   description String?
+  content     String?
   location    String?
   startTime   DateTime
   endTime     DateTime

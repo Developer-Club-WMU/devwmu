@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { DateTimePicker } from '@/components/ui/datetime-picker'
 import { upsertEventSchema } from '@/server/core/handlers/app/upsert-event.handler'
 import { z } from 'zod'
 import { EventStatus } from 'generated/enums'
@@ -29,6 +30,7 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
     defaultValues: {
       title: defaultValues?.title ?? '',
       description: defaultValues?.description ?? '',
+      content: defaultValues?.content ?? '',
       location: defaultValues?.location ?? '',
       startTime: defaultValues?.startTime ?? new Date(),
       endTime: defaultValues?.endTime ?? new Date(Date.now() + 3600000), // Default to 1 hour from now
@@ -47,10 +49,8 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
     },
   })
 
-  // Format date correctly for datetime-local input
-  const formatDateForInput = (date: Date) => {
-    return new Date(date).toISOString().slice(0, 16)
-  }
+  // We use the custom DateTimePicker instead
+
 
   return (
     <form
@@ -88,12 +88,16 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>Start Time *</Label>
-              <Input
-                id={field.name}
-                type="datetime-local"
-                value={formatDateForInput(field.state.value)}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(new Date(e.target.value))}
+              <DateTimePicker
+                value={field.state.value}
+                onChange={(newDate) => {
+                  field.handleChange(newDate)
+                  // Auto-bump the end time if start time crosses it
+                  const currentEnd = form.getFieldValue('endTime')
+                  if (newDate >= currentEnd) {
+                    form.setFieldValue('endTime', new Date(newDate.getTime() + 3600000)) // +1 hour
+                  }
+                }}
               />
               {field.state.meta.errors ? (
                 <em className="text-sm text-destructive" role="alert">
@@ -109,12 +113,9 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
           children={(field) => (
             <div className="space-y-2">
               <Label htmlFor={field.name}>End Time *</Label>
-              <Input
-                id={field.name}
-                type="datetime-local"
-                value={formatDateForInput(field.state.value)}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(new Date(e.target.value))}
+              <DateTimePicker
+                value={field.state.value}
+                onChange={(newDate) => field.handleChange(newDate)}
               />
               {field.state.meta.errors ? (
                 <em className="text-sm text-destructive" role="alert">
@@ -154,7 +155,25 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Join us for..."
               className="resize-y"
-              rows={4}
+              rows={3}
+            />
+          </div>
+        )}
+      />
+
+      <form.Field
+        name="content"
+        children={(field) => (
+          <div className="space-y-2">
+            <Label htmlFor={field.name}>Markdown Content</Label>
+            <Textarea
+              id={field.name}
+              value={field.state.value ?? ''}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              placeholder="## Hackathon Details\n\nWrite the full event text here utilizing Markdown formatting."
+              className="resize-y font-mono"
+              rows={10}
             />
           </div>
         )}
@@ -226,6 +245,18 @@ export function EventForm({ defaultValues, onSubmit, userId }: EventFormProps) {
             </div>
           </div>
         )}
+      />
+
+      <form.Subscribe
+        selector={(state) => [state.errorMap]}
+        children={([errorMap]) => {
+          if (!errorMap || !errorMap.onChange) return null
+          return (
+            <div className="text-sm font-medium text-destructive bg-destructive/10 p-3 rounded-md">
+              {errorMap.onChange.toString()}
+            </div>
+          )
+        }}
       />
 
       <form.Subscribe

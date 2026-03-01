@@ -18,23 +18,30 @@ import { EventStatus } from 'generated/enums'
  * We validate only the Event "data" payload,
  * not full Prisma args. The handler wraps it correctly.
  */
-export const upsertEventSchema = z.object({
-  title: z.string().min(1),
+export const upsertEventSchema = z
+  .object({
+    id: z.string().optional(),
+    title: z.string().min(1),
 
-  description: z.string().nullable().optional(),
-  location: z.string().nullable().optional(),
+    description: z.string().nullable().optional(),
+    content: z.string().nullable().optional(),
+    location: z.string().nullable().optional(),
 
-  // Accepts ISO strings and converts them into Date
-  startTime: z.coerce.date(),
-  endTime: z.coerce.date(),
+    // Accepts ISO strings and converts them into Date
+    startTime: z.coerce.date(),
+    endTime: z.coerce.date(),
 
-  status: z.enum(EventStatus).optional(),
+    status: z.enum(EventStatus).optional(),
 
-  capacity: z.number().int().positive().nullable().optional(),
-  isPublic: z.boolean().optional(),
+    capacity: z.number().int().positive().nullable().optional(),
+    isPublic: z.boolean().optional(),
 
-  createdById: z.string().min(1),
-})
+    createdById: z.string().min(1),
+  })
+  .refine((data) => data.endTime > data.startTime, {
+    message: 'End time must be after start time',
+    path: ['endTime'],
+  })
 
 /**
  * upsertEventFn
@@ -66,8 +73,11 @@ export const upsertEventFn = createServerFn()
     const program = Effect.gen(function* () {
       const service = yield* EventService
 
+      const { id, ...eventData } = data
+
       return yield* service.upsertEvent({
-        upsert: { data },
+        id,
+        data: eventData,
       })
     })
 

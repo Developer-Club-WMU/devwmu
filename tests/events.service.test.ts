@@ -18,9 +18,10 @@ describe('EventService', () => {
   const validEventData = {
     title: 'Test Event',
     description: null,
+    content: null,
     location: null,
     startTime: new Date(),
-    endTime: new Date(),
+    endTime: new Date(Date.now() + 3600000), // 1 hour later
     status: 'DRAFT' as EventStatus,
     capacity: null,
     isPublic: true,
@@ -42,7 +43,7 @@ describe('EventService', () => {
     const program = Effect.gen(function* () {
       const service = yield* EventService
       return yield* service.upsertEvent({
-        upsert: { data: validEventData },
+        data: validEventData,
       })
     }).pipe(Effect.provide(TestLayer))
 
@@ -63,7 +64,7 @@ describe('EventService', () => {
     const program = Effect.gen(function* () {
       const service = yield* EventService
       return yield* service.upsertEvent({
-        upsert: { data: validEventData },
+        data: validEventData,
       })
     }).pipe(Effect.provide(TestLayer))
 

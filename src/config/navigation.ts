@@ -33,6 +33,10 @@ export const navigationConfig: NavigationConfig = {
         href: '/',
       },
       {
+        title: 'About',
+        href: '/#about',
+      },
+      {
         title: 'Communities',
         items: [
           {
@@ -61,7 +65,7 @@ export const navigationConfig: NavigationConfig = {
       },
       {
         title: 'Events',
-        href: '#',
+        href: '/events',
       },
     ],
     cta: [

@@ -15,9 +15,11 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AppEventsIndexRouteImport } from './routes/app/events/index'
 import { Route as PublicSignInIndexRouteImport } from './routes/_public/sign-in/index'
+import { Route as PublicEventsIndexRouteImport } from './routes/_public/events/index'
 import { Route as AppEventsCreateRouteImport } from './routes/app/events/create'
 import { Route as AppEventsEventIdRouteImport } from './routes/app/events/$eventId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as PublicEventsEventIdRouteImport } from './routes/_public/events/$eventId'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
@@ -48,6 +50,11 @@ const PublicSignInIndexRoute = PublicSignInIndexRouteImport.update({
   path: '/sign-in/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const PublicEventsIndexRoute = PublicEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 const AppEventsCreateRoute = AppEventsCreateRouteImport.update({
   id: '/events/create',
   path: '/events/create',
@@ -63,23 +70,32 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicEventsEventIdRoute = PublicEventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/events/': typeof PublicEventsIndexRoute
   '/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/app': typeof AppIndexRoute
+  '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/events': typeof PublicEventsIndexRoute
   '/sign-in': typeof PublicSignInIndexRoute
   '/app/events': typeof AppEventsIndexRoute
 }
@@ -89,9 +105,11 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/_public/': typeof PublicIndexRoute
   '/app/': typeof AppIndexRoute
+  '/_public/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/_public/events/': typeof PublicEventsIndexRoute
   '/_public/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
 }
@@ -101,18 +119,22 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/'
+    | '/events/$eventId'
     | '/api/auth/$'
     | '/app/events/$eventId'
     | '/app/events/create'
+    | '/events/'
     | '/sign-in/'
     | '/app/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/app'
+    | '/events/$eventId'
     | '/api/auth/$'
     | '/app/events/$eventId'
     | '/app/events/create'
+    | '/events'
     | '/sign-in'
     | '/app/events'
   id:
@@ -121,9 +143,11 @@ export interface FileRouteTypes {
     | '/app'
     | '/_public/'
     | '/app/'
+    | '/_public/events/$eventId'
     | '/api/auth/$'
     | '/app/events/$eventId'
     | '/app/events/create'
+    | '/_public/events/'
     | '/_public/sign-in/'
     | '/app/events/'
   fileRoutesById: FileRoutesById
@@ -178,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicSignInIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_public/events/': {
+      id: '/_public/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof PublicEventsIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
     '/app/events/create': {
       id: '/app/events/create'
       path: '/events/create'
@@ -199,16 +230,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/events/$eventId': {
+      id: '/_public/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof PublicEventsEventIdRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
   }
 }
 
 interface PublicRouteRouteChildren {
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicEventsEventIdRoute: typeof PublicEventsEventIdRoute
+  PublicEventsIndexRoute: typeof PublicEventsIndexRoute
   PublicSignInIndexRoute: typeof PublicSignInIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
+  PublicEventsEventIdRoute: PublicEventsEventIdRoute,
+  PublicEventsIndexRoute: PublicEventsIndexRoute,
   PublicSignInIndexRoute: PublicSignInIndexRoute,
 }
 

@@ -1,5 +1,5 @@
 import { Context, Effect, Layer } from 'effect'
-import type { Event, Prisma } from 'generated/client'
+import type { Event } from 'generated/client'
 import { DbClient, DbClientLive } from '../repositories/prisma.repository'
 import { PrismaError, NotFoundError } from '../shared/errors'
 
@@ -32,12 +32,21 @@ export class EventService extends Context.Tag('EventService')<
  */
 interface EventServiceMethods {
   readonly upsertEvent: (args: {
-    upsert: Prisma.EventCreateArgs
+    data: any
+    id?: string
   }) => Effect.Effect<Event, PrismaError>
 
   readonly listEvents: () => Effect.Effect<Event[], PrismaError>
 
   readonly getEventById: (
+    id: string,
+  ) => Effect.Effect<Event, PrismaError | NotFoundError>
+
+  readonly getPublicEvents: () => Effect.Effect<
+    { upcoming: Event[]; past: Event[] },
+    PrismaError
+  >
+  readonly getPublicEventById: (
     id: string,
   ) => Effect.Effect<Event, PrismaError | NotFoundError>
 }
@@ -73,9 +82,19 @@ export const EventServiceLive = Layer.effect(
        *
        * Any Prisma error is mapped to a domain-level PrismaError.
        */
-      upsertEvent: (args) =>
+      upsertEvent: ({ data, id }) =>
         Effect.tryPromise({
-          try: () => dbClient.event.create(args.upsert),
+          try: () => {
+            if (id) {
+              return dbClient.event.update({
+                where: { id },
+                data,
+              })
+            }
+            return dbClient.event.create({
+              data,
+            })
+          },
           catch: () =>
             new PrismaError({
               message: 'Failed to upsert event',
@@ -109,6 +128,57 @@ export const EventServiceLive = Layer.effect(
             event
               ? Effect.succeed(event)
               : Effect.fail(new NotFoundError({ message: 'Event not found' })),
+          ),
+        ),
+
+      getPublicEvents: () =>
+        Effect.tryPromise({
+          try: async () => {
+            const now = new Date()
+            const [upcoming, past] = await Promise.all([
+              dbClient.event.findMany({
+                where: {
+                  status: 'PUBLISHED',
+                  isPublic: true,
+                  startTime: { gte: now },
+                },
+                orderBy: { startTime: 'asc' },
+              }),
+              dbClient.event.findMany({
+                where: {
+                  status: 'PUBLISHED',
+                  isPublic: true,
+                  startTime: { lt: now },
+                },
+                orderBy: { startTime: 'desc' },
+                take: 10,
+              }),
+            ])
+            return { upcoming, past }
+          },
+          catch: () =>
+            new PrismaError({ message: 'Failed to fetch public events' }),
+        }),
+
+      getPublicEventById: (id) =>
+        Effect.tryPromise({
+          try: () =>
+            dbClient.event.findFirst({
+              where: { id, status: 'PUBLISHED', isPublic: true },
+            }),
+          catch: () =>
+            new PrismaError({
+              message: 'Database error fetching public event',
+            }),
+        }).pipe(
+          Effect.flatMap((event) =>
+            event
+              ? Effect.succeed(event)
+              : Effect.fail(
+                  new NotFoundError({
+                    message: 'Event not found or not public',
+                  }),
+                ),
           ),
         ),
     }
