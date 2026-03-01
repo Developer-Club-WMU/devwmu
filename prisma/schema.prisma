@@ -8,15 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id             String          @id
+  name           String
+  email          String
+  emailVerified  Boolean         @default(false)
+  image          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  events         Event[]
+  eventAttendees EventAttendee[]
 
   @@unique([email])
   @@map("user")
@@ -68,4 +70,72 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum EventStatus {
+  DRAFT // Being created, not visible
+  REVIEW // Submitted for approval
+  APPROVED // Approved but not published
+  PUBLISHED // Visible to members
+  CANCELLED // Cancelled before event date
+  COMPLETED // Event happened
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  location    String?
+  startTime   DateTime
+  endTime     DateTime
+
+  status EventStatus @default(DRAFT)
+
+  capacity Int?
+  isPublic Boolean @default(true)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendees        EventAttendee[]
+  eventTagOnEvents EventTagOnEvent[]
+
+  @@index([status])
+  @@index([startTime])
+}
+
+model EventAttendee {
+  id String @id @default(cuid())
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rsvpAt   DateTime @default(now())
+  attended Boolean  @default(false)
+
+  @@unique([eventId, userId])
+  @@index([userId])
+}
+
+model EventTag {
+  id   String @id @default(cuid())
+  name String @unique
+
+  events EventTagOnEvent[]
+}
+
+model EventTagOnEvent {
+  eventId String
+  tagId   String
+
+  event Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tag   EventTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, tagId])
 }
