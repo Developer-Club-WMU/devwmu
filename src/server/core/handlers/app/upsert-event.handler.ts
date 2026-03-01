@@ -1,11 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { Effect, Layer } from 'effect'
-import {
-  EventService,
-  EventServiceLayer,
-  EventServiceLive,
-} from '../../domain/events.service'
-import { DbClientLive } from '../../repositories/prisma.repository'
+import { Effect } from 'effect'
+import { EventService, EventServiceLayer } from '../../domain/events.service'
 import { z } from 'zod'
 import { EventStatus } from 'generated/enums'
 

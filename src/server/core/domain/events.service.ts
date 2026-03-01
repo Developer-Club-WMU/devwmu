@@ -1,7 +1,7 @@
 import { Context, Effect, Layer } from 'effect'
 import type { Event, Prisma } from 'generated/client'
 import { DbClient, DbClientLive } from '../repositories/prisma.repository'
-import { PrismaError } from '../shared/errors'
+import { PrismaError, NotFoundError } from '../shared/errors'
 
 /**
  * EventService Tag
@@ -34,6 +34,12 @@ interface EventServiceMethods {
   readonly upsertEvent: (args: {
     upsert: Prisma.EventCreateArgs
   }) => Effect.Effect<Event, PrismaError>
+
+  readonly listEvents: () => Effect.Effect<Event[], PrismaError>
+
+  readonly getEventById: (
+    id: string,
+  ) => Effect.Effect<Event, PrismaError | NotFoundError>
 }
 
 /**
@@ -75,6 +81,36 @@ export const EventServiceLive = Layer.effect(
               message: 'Failed to upsert event',
             }),
         }),
+
+      /**
+       * Lists all events ordered by start time.
+       */
+      listEvents: () =>
+        Effect.tryPromise({
+          try: () => dbClient.event.findMany({ orderBy: { startTime: 'asc' } }),
+          catch: () =>
+            new PrismaError({
+              message: 'Failed to fetch events',
+            }),
+        }),
+
+      /**
+       * Gets a specific event by ID.
+       */
+      getEventById: (id) =>
+        Effect.tryPromise({
+          try: () => dbClient.event.findUnique({ where: { id } }),
+          catch: () =>
+            new PrismaError({
+              message: 'Database error fetching event',
+            }),
+        }).pipe(
+          Effect.flatMap((event) =>
+            event
+              ? Effect.succeed(event)
+              : Effect.fail(new NotFoundError({ message: 'Event not found' })),
+          ),
+        ),
     }
   }),
 )

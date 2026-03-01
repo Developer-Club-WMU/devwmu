@@ -5,3 +5,4 @@ interface ErrorShape {
 }
 
 export class PrismaError extends Data.TaggedError('Data')<ErrorShape> {}
+export class NotFoundError extends Data.TaggedError('NotFound')<ErrorShape> {}

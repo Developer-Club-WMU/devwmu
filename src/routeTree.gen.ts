@@ -13,7 +13,10 @@ import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as AppEventsIndexRouteImport } from './routes/app/events/index'
 import { Route as PublicSignInIndexRouteImport } from './routes/_public/sign-in/index'
+import { Route as AppEventsCreateRouteImport } from './routes/app/events/create'
+import { Route as AppEventsEventIdRouteImport } from './routes/app/events/$eventId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -35,10 +38,25 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const AppEventsIndexRoute = AppEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const PublicSignInIndexRoute = PublicSignInIndexRouteImport.update({
   id: '/sign-in/',
   path: '/sign-in/',
   getParentRoute: () => PublicRouteRoute,
+} as any)
+const AppEventsCreateRoute = AppEventsCreateRouteImport.update({
+  id: '/events/create',
+  path: '/events/create',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppEventsEventIdRoute = AppEventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -51,13 +69,19 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/app/events/$eventId': typeof AppEventsEventIdRoute
+  '/app/events/create': typeof AppEventsCreateRoute
   '/sign-in/': typeof PublicSignInIndexRoute
+  '/app/events/': typeof AppEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/app': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/app/events/$eventId': typeof AppEventsEventIdRoute
+  '/app/events/create': typeof AppEventsCreateRoute
   '/sign-in': typeof PublicSignInIndexRoute
+  '/app/events': typeof AppEventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -66,13 +90,31 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/app/': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/app/events/$eventId': typeof AppEventsEventIdRoute
+  '/app/events/create': typeof AppEventsCreateRoute
   '/_public/sign-in/': typeof PublicSignInIndexRoute
+  '/app/events/': typeof AppEventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/app/' | '/api/auth/$' | '/sign-in/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/'
+    | '/api/auth/$'
+    | '/app/events/$eventId'
+    | '/app/events/create'
+    | '/sign-in/'
+    | '/app/events/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/api/auth/$' | '/sign-in'
+  to:
+    | '/'
+    | '/app'
+    | '/api/auth/$'
+    | '/app/events/$eventId'
+    | '/app/events/create'
+    | '/sign-in'
+    | '/app/events'
   id:
     | '__root__'
     | '/_public'
@@ -80,7 +122,10 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/app/'
     | '/api/auth/$'
+    | '/app/events/$eventId'
+    | '/app/events/create'
     | '/_public/sign-in/'
+    | '/app/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,12 +164,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/app/events/': {
+      id: '/app/events/'
+      path: '/events'
+      fullPath: '/app/events/'
+      preLoaderRoute: typeof AppEventsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_public/sign-in/': {
       id: '/_public/sign-in/'
       path: '/sign-in'
       fullPath: '/sign-in/'
       preLoaderRoute: typeof PublicSignInIndexRouteImport
       parentRoute: typeof PublicRouteRoute
+    }
+    '/app/events/create': {
+      id: '/app/events/create'
+      path: '/events/create'
+      fullPath: '/app/events/create'
+      preLoaderRoute: typeof AppEventsCreateRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/events/$eventId': {
+      id: '/app/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/app/events/$eventId'
+      preLoaderRoute: typeof AppEventsEventIdRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -152,10 +218,16 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppEventsEventIdRoute: typeof AppEventsEventIdRoute
+  AppEventsCreateRoute: typeof AppEventsCreateRoute
+  AppEventsIndexRoute: typeof AppEventsIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppEventsEventIdRoute: AppEventsEventIdRoute,
+  AppEventsCreateRoute: AppEventsCreateRoute,
+  AppEventsIndexRoute: AppEventsIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

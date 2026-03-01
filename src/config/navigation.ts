@@ -108,7 +108,7 @@ export const navigationConfig: NavigationConfig = {
       },
       {
         title: 'Events',
-        href: '/app', // Pending actual route
+        href: '/app/events',
       },
     ],
   },
