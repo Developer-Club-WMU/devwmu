@@ -2,11 +2,29 @@ Welcome to your new TanStack Start app!
 
 # Getting Started
 
+### Environment Setup
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Ensure you generate needed keys
+
 To run this application:
 
 ```bash
 pnpm install
 pnpm dev
+```
+
+# Apply migrations (quickly)
+
+To build this application for production:
+
+```bash
+pnpm db:reset
 ```
 
 # Building For Production
