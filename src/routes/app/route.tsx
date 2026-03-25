@@ -7,7 +7,7 @@ export const Route = createFileRoute('/app')({
 
 function RouteComponent() {
   return (
-    <div className="min-h-screen bg-background font-sans antialiased text-foreground">
+    <div className="min-h-screen bg-background font-sans antialiased text-foreground px-4">
       <AppHeader />
       <main className="flex-1">
         <Outlet />
