@@ -52,7 +52,7 @@ function EditEventPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-3xl">
+    <div className="container mx-auto p-6 max-w-7xl">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Edit Event</CardTitle>
