@@ -162,17 +162,17 @@ function Dashboard() {
         {/* Sidebar: Quick Links & Stats */}
         <div className="space-y-8">
           {/* Membership Card */}
-          <Card className="bg-primary text-primary-foreground overflow-hidden relative">
-            <div className="absolute top-0 right-0 -translate-y-4 translate-x-4 opacity-10">
+          <Card className="bg-public-accent text-public-bg overflow-hidden relative border-0 shadow-xl shadow-public-accent/10">
+            <div className="absolute top-0 right-0 -translate-y-4 translate-x-4 opacity-20">
               <Trophy className="w-32 h-32" />
             </div>
             <CardHeader>
               <CardTitle className="text-xl font-black uppercase">Your Journey</CardTitle>
-              <CardDescription className="text-primary-foreground/80 font-medium italic">Dev Club Member</CardDescription>
+              <CardDescription className="text-public-bg/70 font-bold italic">Dev Club Member</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-md">
+                <div className="p-3 bg-public-bg/10 rounded-xl backdrop-blur-md border border-public-bg/10">
                    <Users className="w-8 h-8" />
                 </div>
                 <div>
@@ -180,7 +180,7 @@ function Dashboard() {
                   <div className="text-xs uppercase font-bold tracking-widest opacity-80">Rookie Developer</div>
                 </div>
               </div>
-              <div className="w-full py-3 bg-white text-primary rounded-lg font-black uppercase text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-white/90 transition-colors">
+              <div className="w-full py-3 bg-public-bg text-public-accent rounded-lg font-black uppercase text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-public-bg/90 transition-colors shadow-lg">
                 Complete Profile <ChevronRight className="w-4 h-4" />
               </div>
             </CardContent>
