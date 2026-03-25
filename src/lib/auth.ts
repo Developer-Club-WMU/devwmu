@@ -19,5 +19,10 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'sqlite',
   }),
-  plugins: [admin(), tanstackStartCookies()],
+  plugins: [
+    admin({
+      defaultRole: 'admin',
+    }),
+    tanstackStartCookies(),
+  ],
 })

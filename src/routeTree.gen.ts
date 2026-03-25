@@ -13,6 +13,7 @@ import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as AppMembersIndexRouteImport } from './routes/app/members/index'
 import { Route as AppEventsIndexRouteImport } from './routes/app/events/index'
 import { Route as PublicSignInIndexRouteImport } from './routes/_public/sign-in/index'
 import { Route as PublicEventsIndexRouteImport } from './routes/_public/events/index'
@@ -40,6 +41,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRouteRoute,
+} as any)
+const AppMembersIndexRoute = AppMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppEventsIndexRoute = AppEventsIndexRouteImport.update({
   id: '/events/',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/events/': typeof PublicEventsIndexRoute
   '/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
+  '/app/members/': typeof AppMembersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/events': typeof PublicEventsIndexRoute
   '/sign-in': typeof PublicSignInIndexRoute
   '/app/events': typeof AppEventsIndexRoute
+  '/app/members': typeof AppMembersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/_public/events/': typeof PublicEventsIndexRoute
   '/_public/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
+  '/app/members/': typeof AppMembersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/events/'
     | '/sign-in/'
     | '/app/events/'
+    | '/app/members/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/sign-in'
     | '/app/events'
+    | '/app/members'
   id:
     | '__root__'
     | '/_public'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/_public/events/'
     | '/_public/sign-in/'
     | '/app/events/'
+    | '/app/members/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -199,6 +211,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRouteRoute
+    }
+    '/app/members/': {
+      id: '/app/members/'
+      path: '/members'
+      fullPath: '/app/members/'
+      preLoaderRoute: typeof AppMembersIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/app/events/': {
       id: '/app/events/'
@@ -284,6 +303,7 @@ interface AppRouteRouteChildren {
   AppEventsEventIdRoute: typeof AppEventsEventIdRoute
   AppEventsCreateRoute: typeof AppEventsCreateRoute
   AppEventsIndexRoute: typeof AppEventsIndexRoute
+  AppMembersIndexRoute: typeof AppMembersIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -291,6 +311,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppEventsEventIdRoute: AppEventsEventIdRoute,
   AppEventsCreateRoute: AppEventsCreateRoute,
   AppEventsIndexRoute: AppEventsIndexRoute,
+  AppMembersIndexRoute: AppMembersIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

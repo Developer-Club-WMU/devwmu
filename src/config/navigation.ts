@@ -104,7 +104,7 @@ export const navigationConfig: NavigationConfig = {
     mainNav: [
       {
         title: 'Members',
-        href: '/app', // Pending actual route
+        href: '/app/members', // Pending actual route
       },
       {
         title: 'Events',
