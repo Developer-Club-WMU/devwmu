@@ -10,8 +10,7 @@ export const getSession = createServerFn().handler(async () => {
 
 export const assertSessionFn = createServerFn().handler(async () => {
   const session = await getSession()
-  if (!session || !session.session) throw redirect({ to: '/sign-in' })
-  else throw redirect({ to: '/app' })
+  if (session && session.session) throw redirect({ to: '/app' })
 })
 
 export const assertAuthenticatedFn = createServerFn().handler(async () => {

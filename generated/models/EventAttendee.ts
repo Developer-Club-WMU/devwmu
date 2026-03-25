@@ -1246,6 +1246,11 @@ export type EventAttendeeFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` EventAttendees.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of EventAttendees.
+   */
   distinct?: Prisma.EventAttendeeScalarFieldEnum | Prisma.EventAttendeeScalarFieldEnum[]
 }
 

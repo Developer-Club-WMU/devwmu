@@ -992,6 +992,11 @@ export type EventTagFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` EventTags.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of EventTags.
+   */
   distinct?: Prisma.EventTagScalarFieldEnum | Prisma.EventTagScalarFieldEnum[]
 }
 
