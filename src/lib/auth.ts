@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth'
+import { admin } from 'better-auth/plugins'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from '@/db'
@@ -18,5 +19,5 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'sqlite',
   }),
-  plugins: [tanstackStartCookies()],
+  plugins: [admin(), tanstackStartCookies()],
 })
