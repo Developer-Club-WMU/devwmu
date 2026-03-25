@@ -26,7 +26,7 @@ function PublicEventsPage() {
     )
   }
 
-  const { upcoming, past } = data
+  const { ongoing, upcoming, past } = data
 
   const renderEventCard = (event: typeof upcoming[0]) => (
     <Card 
@@ -86,10 +86,32 @@ function PublicEventsPage() {
         </p>
       </div>
 
+      {ongoing.length > 0 && (
+        <div className="mb-20">
+          <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3">
+            Ongoing Now
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+              </span>
+              <span className="text-red-500 text-xs font-black tracking-[0.2em] animate-pulse">
+                LIVE
+              </span>
+            </div>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {ongoing.map(renderEventCard)}
+          </div>
+        </div>
+      )}
+
       <div className="mb-20">
         <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-8 flex items-center gap-3">
           Upcoming Events
-          <span className="bg-wmu-gold/10 text-wmu-gold text-sm px-3 py-1 rounded-full border border-wmu-gold/20 font-bold tracking-widest">{upcoming.length}</span>
+          <span className="bg-wmu-gold/10 text-wmu-gold text-sm px-3 py-1 rounded-full border border-wmu-gold/20 font-bold tracking-widest">
+            {upcoming.length}
+          </span>
         </h2>
         
         {upcoming.length === 0 ? (

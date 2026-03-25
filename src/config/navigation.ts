@@ -34,7 +34,7 @@ export const navigationConfig: NavigationConfig = {
       },
       {
         title: 'About',
-        href: '/#about',
+        href: '/about',
       },
       // {
       //   title: 'Communities',

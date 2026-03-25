@@ -43,7 +43,7 @@ interface EventServiceMethods {
   ) => Effect.Effect<Event, PrismaError | NotFoundError>
 
   readonly getPublicEvents: () => Effect.Effect<
-    { upcoming: Event[]; past: Event[] },
+    { upcoming: Event[]; past: Event[]; ongoing: Event[] },
     PrismaError
   >
   readonly getPublicEventById: (
@@ -135,12 +135,13 @@ export const EventServiceLive = Layer.effect(
         Effect.tryPromise({
           try: async () => {
             const now = new Date()
-            const [upcoming, past] = await Promise.all([
+            const [ongoing, upcoming, past] = await Promise.all([
               dbClient.event.findMany({
                 where: {
                   status: 'PUBLISHED',
                   isPublic: true,
-                  startTime: { gte: now },
+                  startTime: { lte: now },
+                  endTime: { gte: now },
                 },
                 orderBy: { startTime: 'asc' },
               }),
@@ -148,13 +149,21 @@ export const EventServiceLive = Layer.effect(
                 where: {
                   status: 'PUBLISHED',
                   isPublic: true,
-                  startTime: { lt: now },
+                  startTime: { gt: now },
                 },
-                orderBy: { startTime: 'desc' },
+                orderBy: { startTime: 'asc' },
+              }),
+              dbClient.event.findMany({
+                where: {
+                  status: 'PUBLISHED',
+                  isPublic: true,
+                  endTime: { lt: now },
+                },
+                orderBy: { endTime: 'desc' },
                 take: 10,
               }),
             ])
-            return { upcoming, past }
+            return { ongoing, upcoming, past }
           },
           catch: () =>
             new PrismaError({ message: 'Failed to fetch public events' }),
