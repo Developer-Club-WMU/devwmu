@@ -16,6 +16,7 @@ import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AppEventsIndexRouteImport } from './routes/app/events/index'
 import { Route as PublicSignInIndexRouteImport } from './routes/_public/sign-in/index'
 import { Route as PublicEventsIndexRouteImport } from './routes/_public/events/index'
+import { Route as PublicAboutIndexRouteImport } from './routes/_public/about/index'
 import { Route as AppEventsCreateRouteImport } from './routes/app/events/create'
 import { Route as AppEventsEventIdRouteImport } from './routes/app/events/$eventId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -55,6 +56,11 @@ const PublicEventsIndexRoute = PublicEventsIndexRouteImport.update({
   path: '/events/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const PublicAboutIndexRoute = PublicAboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 const AppEventsCreateRoute = AppEventsCreateRouteImport.update({
   id: '/events/create',
   path: '/events/create',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/about/': typeof PublicAboutIndexRoute
   '/events/': typeof PublicEventsIndexRoute
   '/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/about': typeof PublicAboutIndexRoute
   '/events': typeof PublicEventsIndexRoute
   '/sign-in': typeof PublicSignInIndexRoute
   '/app/events': typeof AppEventsIndexRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/_public/about/': typeof PublicAboutIndexRoute
   '/_public/events/': typeof PublicEventsIndexRoute
   '/_public/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/app/events/$eventId'
     | '/app/events/create'
+    | '/about/'
     | '/events/'
     | '/sign-in/'
     | '/app/events/'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/app/events/$eventId'
     | '/app/events/create'
+    | '/about'
     | '/events'
     | '/sign-in'
     | '/app/events'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/app/events/$eventId'
     | '/app/events/create'
+    | '/_public/about/'
     | '/_public/events/'
     | '/_public/sign-in/'
     | '/app/events/'
@@ -209,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicEventsIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_public/about/': {
+      id: '/_public/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof PublicAboutIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
     '/app/events/create': {
       id: '/app/events/create'
       path: '/events/create'
@@ -243,6 +262,7 @@ declare module '@tanstack/react-router' {
 interface PublicRouteRouteChildren {
   PublicIndexRoute: typeof PublicIndexRoute
   PublicEventsEventIdRoute: typeof PublicEventsEventIdRoute
+  PublicAboutIndexRoute: typeof PublicAboutIndexRoute
   PublicEventsIndexRoute: typeof PublicEventsIndexRoute
   PublicSignInIndexRoute: typeof PublicSignInIndexRoute
 }
@@ -250,6 +270,7 @@ interface PublicRouteRouteChildren {
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
   PublicEventsEventIdRoute: PublicEventsEventIdRoute,
+  PublicAboutIndexRoute: PublicAboutIndexRoute,
   PublicEventsIndexRoute: PublicEventsIndexRoute,
   PublicSignInIndexRoute: PublicSignInIndexRoute,
 }
