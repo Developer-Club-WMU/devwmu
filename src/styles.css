@@ -54,17 +54,17 @@ code {
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.871 0.006 286.286);
 
-  /* Public Theme Variables: Official Brand Colors */
-  --public-bg: #4e3022;
+  /* Public Theme Variables: Dark Glassmorphism */
+  --public-bg: #050505;
   --public-fg: #ffffff;
   --public-accent: #f6c84e;
-  --public-accent-muted: rgba(246, 200, 78, 0.15);
-  --public-card-bg: rgba(0, 0, 0, 0.25);
-  --public-card-border: rgba(246, 200, 78, 0.15);
-  --public-glow: rgba(246, 200, 78, 0.1);
+  --public-accent-muted: rgba(246, 200, 78, 0.1);
+  --public-card-bg: rgba(255, 255, 255, 0.04);
+  --public-card-border: rgba(255, 255, 255, 0.08);
+  --public-glow: rgba(246, 200, 78, 0.08);
   --public-cta-bg: #f6c84e;
-  --public-cta-fg: #4e3022;
-  --public-nav-hover: rgba(246, 200, 78, 0.1);
+  --public-cta-fg: #050505;
+  --public-nav-hover: rgba(255, 255, 255, 0.05);
 }
 
 .dark {
