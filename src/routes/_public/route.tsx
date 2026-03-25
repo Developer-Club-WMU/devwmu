@@ -7,9 +7,11 @@ export const Route = createFileRoute('/_public')({
 
 function PublicLayout() {
   return (
-    <>
+    <div className="min-h-screen bg-public-bg text-public-fg selection:bg-public-accent/30 font-sans antialiased">
       <NavBar />
-      <Outlet />
-    </>
+      <main>
+        <Outlet />
+      </main>
+    </div>
   )
 }

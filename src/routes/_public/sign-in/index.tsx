@@ -27,17 +27,17 @@ function SignIn() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans selection:bg-wmu-gold/30 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-public-bg font-sans selection:bg-public-accent/30 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Abstract atmospheric background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-wmu-brown/20 via-slate-950 to-slate-950"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-public-glow/20 via-public-bg to-public-bg"></div>
 
       {/* Glows */}
-      <div className="absolute top-[20%] right-[10%] w-[50%] h-[50%] rounded-full bg-wmu-brown/10 blur-[120px] pointer-events-none"></div>
-      <div className="absolute -bottom-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-wmu-gold/5 blur-[100px] pointer-events-none"></div>
+      <div className="absolute top-[20%] right-[10%] w-[50%] h-[50%] rounded-full bg-public-glow/10 blur-[120px] pointer-events-none"></div>
+      <div className="absolute -bottom-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-public-accent border-public-accent/5 blur-[100px] pointer-events-none"></div>
 
-      <Card className="w-full max-w-md bg-slate-900/80 border border-slate-800 backdrop-blur-xl relative z-10 overflow-hidden rounded-none shadow-2xl">
+      <Card className="w-full max-w-md bg-public-card border border-public-border backdrop-blur-xl relative z-10 overflow-hidden rounded-none shadow-2xl">
         <CardContent className="p-8 md:p-10 flex flex-col items-center">
-          <div className="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-xl bg-wmu-brown/40 border border-wmu-brown text-wmu-gold shadow-lg shadow-wmu-brown/20">
+          <div className="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-xl bg-public-accent/10 border border-public-accent/30 text-public-accent shadow-lg shadow-public-accent/10">
             <LogIn className="w-8 h-8" />
           </div>
 
@@ -52,7 +52,7 @@ function SignIn() {
           <button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full relative group inline-flex items-center justify-center px-6 py-4 font-bold uppercase tracking-widest text-slate-950 bg-wmu-gold overflow-hidden transition-all shadow-[0_0_20px_rgba(246,200,78,0.3)] hover:shadow-[0_0_30px_rgba(246,200,78,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full relative group inline-flex items-center justify-center px-6 py-4 font-bold uppercase tracking-widest text-public-bg bg-public-accent overflow-hidden transition-all shadow-[0_0_20px_rgba(246,200,78,0.3)] hover:shadow-[0_0_30px_rgba(246,200,78,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <div className="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
 
@@ -85,16 +85,16 @@ function SignIn() {
             </div>
 
             {/* Decorative border cut */}
-            <div className="absolute top-0 right-0 border-t-[6px] border-l-[6px] border-t-slate-900 border-l-transparent"></div>
-            <div className="absolute bottom-0 left-0 border-b-[6px] border-r-[6px] border-b-slate-900 border-r-transparent"></div>
+            <div className="absolute top-0 right-0 border-t-[6px] border-l-[6px] border-t-public-card border-l-transparent"></div>
+            <div className="absolute bottom-0 left-0 border-b-[6px] border-r-[6px] border-b-public-card border-r-transparent"></div>
           </button>
         </CardContent>
 
         {/* League style border accents */}
-        <div className="absolute top-0 left-0 w-8 h-[2px] bg-wmu-gold" />
-        <div className="absolute top-0 left-0 w-[2px] h-8 bg-wmu-gold" />
-        <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-wmu-gold" />
-        <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-wmu-gold" />
+        <div className="absolute top-0 left-0 w-8 h-[2px] bg-public-accent" />
+        <div className="absolute top-0 left-0 w-[2px] h-8 bg-public-accent" />
+        <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-public-accent" />
+        <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-public-accent" />
       </Card>
     </div>
   )
