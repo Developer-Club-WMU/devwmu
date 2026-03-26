@@ -1,13 +1,19 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getEventFn } from '@/server/core/handlers/app/get-event.handler'
+import { toggleAttendanceFn } from '@/server/core/handlers/app/toggle-attendance.handler'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/components/ui/card'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import {
   Table,
   TableBody,
@@ -18,7 +24,9 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
 import { format } from 'date-fns'
+import { toast } from 'sonner'
 import { 
   Users, 
   MapPin, 
@@ -27,7 +35,8 @@ import {
   Edit2, 
   ChevronLeft,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Info
 } from 'lucide-react'
 import { assertOfficerFn } from '@/server/helpers/route-protection'
 
@@ -38,10 +47,23 @@ export const Route = createFileRoute('/app/events/$eventId/')({
 
 function EventDetailsPage() {
   const { eventId } = Route.useParams()
+  const queryClient = useQueryClient()
 
   const { data: event, isLoading, error } = useQuery({
     queryKey: ['events', eventId],
     queryFn: () => getEventFn({ data: eventId }),
+  })
+
+  const { mutate: toggleAttendance } = useMutation({
+    mutationFn: (args: { attendeeId: string; attended: boolean }) =>
+      toggleAttendanceFn({ data: args }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['events', eventId] })
+      toast.success(variables.attended ? 'Member marked as attended' : 'Attendance record removed')
+    },
+    onError: (err: any) => {
+      toast.error('Failed to update attendance: ' + err.message)
+    },
   })
 
   if (isLoading) {
@@ -62,7 +84,8 @@ function EventDetailsPage() {
   }
 
   return (
-    <div className="container py-8 max-w-7xl mx-auto space-y-8">
+    <TooltipProvider>
+      <div className="container py-8 max-w-7xl mx-auto space-y-8">
       {/* Header / Breadcrumbs */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -130,7 +153,13 @@ function EventDetailsPage() {
                     </div>
                     <div>
                       <div className="text-xs font-bold uppercase text-muted-foreground tracking-widest mb-1">Attendance</div>
-                      <div className="font-bold text-lg">{event._count?.attendees || 0} Registered</div>
+                      <div className="font-bold text-lg">
+                        <span className="text-emerald-500">
+                          {event.attendees?.filter((a: any) => a.attended).length || 0}
+                        </span>
+                        <span className="text-muted-foreground/30 mx-2 font-light">/</span>
+                        {event._count?.attendees || 0} Registered
+                      </div>
                       {event.capacity && (
                         <div className="text-sm text-muted-foreground font-medium">
                           Capacity: {event.capacity} seats
@@ -154,24 +183,30 @@ function EventDetailsPage() {
 
           {/* Attendees List */}
           <section className="space-y-4">
-            <h2 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2">
-              <Users className="w-6 h-6 text-primary" /> Registered Members
+            <h2 className="text-2xl font-black uppercase tracking-tight flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users className="w-6 h-6 text-primary" /> Registered Members
+              </div>
+              <Badge variant="outline" className="font-black">
+                {event.attendees?.filter((a: any) => a.attended).length || 0} / {event.attendees?.length || 0} PRESENT
+              </Badge>
             </h2>
             <Card className="border-0 shadow-xl overflow-hidden">
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-muted uppercase">
-                    <TableRow className="hover:bg-transparent">
+                    <TableRow className="hover:bg-transparent text-muted-foreground uppercase">
                       <TableHead className="font-bold text-xs py-4">Member</TableHead>
                       <TableHead className="font-bold text-xs py-4">Email</TableHead>
-                      <TableHead className="font-bold text-xs py-4">RSVP Date</TableHead>
-                      <TableHead className="font-bold text-xs py-4 text-right">Status</TableHead>
+                      <TableHead className="font-bold text-xs py-4 text-center">RSVP Date</TableHead>
+                      <TableHead className="font-bold text-xs py-4 text-center">Status</TableHead>
+                      <TableHead className="font-bold text-xs py-4 text-right">Attendance</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {event.attendees?.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center h-32 text-muted-foreground font-medium">
+                        <TableCell colSpan={5} className="text-center h-32 text-muted-foreground font-medium">
                           No members have registered for this event yet.
                         </TableCell>
                       </TableRow>
@@ -193,10 +228,10 @@ function EventDetailsPage() {
                           <TableCell className="text-sm text-muted-foreground font-medium lowercase">
                             {attendee.user.email}
                           </TableCell>
-                          <TableCell className="text-sm text-muted-foreground font-medium">
+                          <TableCell className="text-sm text-muted-foreground font-medium text-center">
                             {format(new Date(attendee.rsvpAt), 'MMM do, yyyy')}
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell className="text-center">
                             {attendee.attended ? (
                               <Badge variant="default" className="bg-green-500 hover:bg-green-600 font-bold uppercase text-[10px]">
                                 <CheckCircle2 className="w-3 h-3 mr-1" /> Attended
@@ -206,6 +241,18 @@ function EventDetailsPage() {
                                 Registered
                               </Badge>
                             )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Switch 
+                              checked={attendee.attended} 
+                              onCheckedChange={(checked) => {
+                                toggleAttendance({ 
+                                  attendeeId: attendee.id, 
+                                  attended: !!checked 
+                                })
+                              }}
+                              className="data-[state=checked]:bg-green-500"
+                            />
                           </TableCell>
                         </TableRow>
                       ))
@@ -219,23 +266,63 @@ function EventDetailsPage() {
 
         {/* Right Column: Mini Stats / Meta */}
         <div className="space-y-8">
-          <Card className="bg-primary text-primary-foreground border-0 shadow-lg shadow-primary/20">
-            <CardHeader>
-              <CardTitle className="text-lg font-black uppercase">Quick Stats</CardTitle>
+          <Card className="border-primary/20 bg-slate-50 dark:bg-slate-900/50 shadow-xl backdrop-blur-sm">
+            <CardHeader className="border-b border-primary/10">
+              <CardTitle className="text-lg font-black uppercase tracking-tight flex items-center justify-between">
+                Quick Stats
+                <Users className="w-5 h-5 text-primary" />
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex justify-between items-center border-b border-white/20 pb-4">
-                <span className="text-sm font-bold opacity-80 uppercase tracking-widest">Growth</span>
-                <span className="text-2xl font-black">+{event._count?.attendees || 0}</span>
+            <CardContent className="space-y-8 p-6">
+              <div className="flex justify-between items-center group">
+                <div className="flex items-center gap-2 tracking-widest text-muted-foreground uppercase">
+                  <span className="text-xs font-black">Growth</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-3.5 h-3.5 cursor-help hover:text-primary transition-colors" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-[200px] text-xs font-bold leading-snug">
+                      Total number of registered members for this event.
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <span className="text-2xl font-black text-primary">+{event._count?.attendees || 0}</span>
               </div>
-              <div className="flex justify-between items-center border-b border-white/20 pb-4">
-                <span className="text-sm font-bold opacity-80 uppercase tracking-widest">Share Range</span>
-                <span className="text-lg font-black">100%</span>
+              
+              <div className="flex justify-between items-center group">
+                <div className="flex items-center gap-2 tracking-widest text-muted-foreground uppercase">
+                  <span className="text-xs font-black">Attendance</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-3.5 h-3.5 cursor-help hover:text-primary transition-colors" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-[200px] text-xs font-bold leading-snug">
+                      Confirmed participants relative to total spots.
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <span className="text-lg font-black">
+                  {event.capacity ? `${Math.round(((event._count?.attendees || 0) / event.capacity) * 100)}%` : '100%'}
+                </span>
               </div>
-              <div className="pt-2">
-                <div className="text-xs font-bold uppercase opacity-80 mb-2">Registration Velocity</div>
-                <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                  <div className="h-full bg-white w-3/4 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
+
+              <div className="pt-2 space-y-4">
+                <div className="flex items-center justify-between tracking-widest text-muted-foreground uppercase">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black">Registration Velocity</span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-3.5 h-3.5 cursor-help hover:text-primary transition-colors" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-[200px] text-xs font-bold leading-snug">
+                        The current rate of new registrations over the last period.
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <span className="text-[10px] font-black text-emerald-500">Normal</span>
+                </div>
+                <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-primary/5">
+                  <div className="h-full bg-primary rounded-full w-3/4 animate-pulse-slow shadow-[0_0_15px_rgba(251,191,36,0.5)]"></div>
                 </div>
               </div>
             </CardContent>
@@ -263,5 +350,6 @@ function EventDetailsPage() {
         </div>
       </div>
     </div>
+    </TooltipProvider>
   )
 }

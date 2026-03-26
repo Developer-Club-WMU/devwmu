@@ -59,6 +59,11 @@ interface EventServiceMethods {
     userId: string
     status: boolean
   }) => Effect.Effect<any, PrismaError>
+
+  readonly toggleAttendance: (args: {
+    attendeeId: string
+    attended: boolean
+  }) => Effect.Effect<any, PrismaError>
 }
 
 /**
@@ -281,6 +286,20 @@ export const EventServiceLive = Layer.effect(
           catch: (_e: any) => {
             return new PrismaError({ message: 'Failed to update RSVP' })
           },
+        }),
+
+      /**
+       * Toggles the attendance status for a specific attendee record.
+       */
+      toggleAttendance: ({ attendeeId, attended }) =>
+        Effect.tryPromise({
+          try: () =>
+            dbClient.eventAttendee.update({
+              where: { id: attendeeId },
+              data: { attended },
+            }),
+          catch: (_e: any) =>
+            new PrismaError({ message: 'Failed to toggle attendance' }),
         }),
     }
   }),
