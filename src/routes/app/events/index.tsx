@@ -66,19 +66,20 @@ function EventsTablePage() {
               <TableHead>Status</TableHead>
               <TableHead>Start Time</TableHead>
               <TableHead>End Time</TableHead>
+              <TableHead className="text-right">Attendees</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">
+                <TableCell colSpan={6} className="text-center h-24">
                   Loading events...
                 </TableCell>
               </TableRow>
             ) : events?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center h-24 text-muted-foreground">
                   No events found. Create one to get started.
                 </TableCell>
               </TableRow>
@@ -96,6 +97,9 @@ function EventsTablePage() {
                   </TableCell>
                   <TableCell>
                     {new Date(event.endTime).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right font-bold">
+                    {event._count?.attendees || 0}
                   </TableCell>
                   <TableCell>
                     <Link
