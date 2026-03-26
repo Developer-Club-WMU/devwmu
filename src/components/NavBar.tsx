@@ -8,13 +8,23 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
-import { Terminal } from 'lucide-react'
+import { Terminal, LayoutDashboard, LogIn } from 'lucide-react'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { navigationConfig } from '@/config/navigation'
 import type { NavGroup, NavItem } from '@/config/navigation'
+import { authClient } from '@/lib/auth-client'
 
 export function NavBar() {
+  const { data: session } = authClient.useSession()
+
+  const ctaItems = session
+    ? [
+        { title: 'Dashboard', href: '/dashboard' },
+        ...navigationConfig.public.cta.filter((i) => i.title !== 'Sign In'),
+      ]
+    : navigationConfig.public.cta
+
   return (
     <header className="fixed top-0 w-full z-50 bg-public-bg/80 backdrop-blur-md border-b border-public-border">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -101,7 +111,7 @@ export function NavBar() {
         </NavigationMenu>
 
         <div className="flex items-center gap-4">
-          {navigationConfig.public.cta.map((cta, index) => {
+          {ctaItems.map((cta, index) => {
             if (cta.external) {
               return (
                 <a
@@ -115,12 +125,20 @@ export function NavBar() {
                 </a>
               )
             }
+            const isDashboard = cta.href === '/dashboard'
             return (
               <Link
                 key={index}
                 to={cta.href}
-                className="hidden md:inline-flex px-6 py-2.5 bg-transparent border border-public-accent hover:bg-public-accent/10 text-public-accent text-sm font-bold uppercase tracking-wider rounded transition-colors shadow-[0_0_15px_rgba(246,200,78,0.1)] hover:shadow-[0_0_25px_rgba(246,200,78,0.2)] items-center justify-center"
+                className={cn(
+                  "hidden md:inline-flex px-6 py-2.5 text-sm font-bold uppercase tracking-wider rounded transition-colors items-center justify-center gap-2",
+                  isDashboard 
+                    ? "bg-public-cta hover:bg-public-cta/90 text-public-cta-fg shadow-[0_0_15px_rgba(246,200,78,0.3)] hover:shadow-[0_0_25px_rgba(246,200,78,0.5)] border-0"
+                    : "bg-transparent border border-public-accent hover:bg-public-accent/10 text-public-accent shadow-[0_0_15px_rgba(246,200,78,0.1)] hover:shadow-[0_0_25px_rgba(246,200,78,0.2)]"
+                )}
               >
+                {cta.title === 'Sign In' && <LogIn className="w-4 h-4" />}
+                {isDashboard && <LayoutDashboard className="w-4 h-4" />}
                 {cta.title}
               </Link>
             )
