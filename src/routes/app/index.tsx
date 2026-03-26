@@ -1,7 +1,8 @@
 import { assertOfficerFn } from '@/server/helpers/route-protection'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { listEventsFn } from '@/server/core/handlers/app/list-events.handler'
+import { rsvpEventFn } from '@/server/core/handlers/app/rsvp-event.handler'
 import { authClient } from '@/lib/auth-client'
 import {
   Calendar,
@@ -12,6 +13,8 @@ import {
   Users,
   Zap,
   LayoutDashboard,
+  UserPlus,
+  Check,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import {
@@ -22,6 +25,8 @@ import {
   CardDescription,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/app/')({
   component: Dashboard,
@@ -38,17 +43,31 @@ const TITLE_MAP: Record<string, string> = {
 
 function Dashboard() {
   const { data: session } = authClient.useSession()
+  const queryClient = useQueryClient()
+  const user = session?.user as any
+
   const { data: events, isLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => listEventsFn(),
+    queryKey: ['events', user?.id],
+    queryFn: () => listEventsFn({ data: { userId: user?.id } }),
+    enabled: !!user?.id,
   })
 
-  const user = session?.user as any
+  const { mutate: toggleRSVP } = useMutation({
+    mutationFn: (args: { eventId: string; status: boolean }) =>
+      rsvpEventFn({ data: { ...args, userId: user?.id } }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      toast.success(variables.status ? 'See you there!' : 'RSVP removed')
+    },
+    onError: (err: any) => {
+      toast.error('Failed to update RSVP: ' + err.message)
+    },
+  })
 
   // Handle Event Categorization
   const now = new Date()
   const ongoing =
-    events?.filter((e) => {
+    events?.filter((e: any) => {
       const start = new Date(e.startTime)
       const end = new Date(e.endTime)
       return now >= start && now <= end
@@ -56,12 +75,12 @@ function Dashboard() {
 
   const upcoming =
     events
-      ?.filter((e) => {
+      ?.filter((e: any) => {
         const start = new Date(e.startTime)
         return start > now
       })
       .sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
       )
       .slice(0, 5) || []
@@ -109,7 +128,7 @@ function Dashboard() {
                 Ongoing Sessions
               </h2>
               <div className="space-y-4">
-                {ongoing.map((event) => (
+                {ongoing.map((event: any) => (
                   <Card
                     key={event.id}
                     className="relative overflow-hidden border-yellow-500/30 bg-yellow-500/5 hover:bg-yellow-500/10 transition-colors"
@@ -168,32 +187,52 @@ function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {upcoming.map((event) => (
-                <Card
-                  key={event.id}
-                  className="hover:border-primary/50 transition-all duration-300 group"
-                >
-                  <CardHeader className="p-5">
-                    <div className="text-xs font-bold text-primary uppercase tracking-widest mb-2">
-                      {format(new Date(event.startTime), 'MMMM do')}
-                    </div>
-                    <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors line-clamp-1">
-                      {event.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-5 pt-0">
-                    <div className="flex flex-col gap-2 text-sm text-muted-foreground font-medium">
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4" />{' '}
-                        {format(new Date(event.startTime), 'h:mm a')}
+              {upcoming.map((event: any) => {
+                const isGoing = event.attendees?.length > 0
+                return (
+                  <Card
+                    key={event.id}
+                    className="hover:border-primary/50 transition-all duration-300 group relative overflow-hidden"
+                  >
+                    <CardHeader className="p-5 pb-2">
+                      <div className="flex justify-between items-start">
+                        <div className="text-xs font-bold text-primary uppercase tracking-widest mb-2">
+                          {format(new Date(event.startTime), 'MMMM do')}
+                        </div>
+                        <Button
+                          size="sm"
+                          variant={isGoing ? 'secondary' : 'default'}
+                          className="h-8 rounded-lg font-bold text-xs uppercase transition-all"
+                          onClick={() => toggleRSVP({ eventId: event.id, status: !isGoing })}
+                        >
+                          {isGoing ? (
+                            <><Check className="w-3 h-3 mr-1" /> Going</>
+                          ) : (
+                            <><UserPlus className="w-3 h-3 mr-1" /> Join</>
+                          )}
+                        </Button>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4" /> {event.location || 'TBA'}
+                      <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors line-clamp-1">
+                        {event.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-5 pt-0">
+                      <div className="flex flex-col gap-2 text-sm text-muted-foreground font-medium">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-4 h-4" />{' '}
+                          {format(new Date(event.startTime), 'h:mm a')}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="w-4 h-4" /> {event.location || 'TBA'}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-primary/70">
+                          <Users className="w-4 h-4" /> {event._count?.attendees || 0} attending
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                )
+              })}
 
               {upcoming.length === 0 && (
                 <div className="col-span-full p-12 text-center border-2 border-dashed rounded-xl text-muted-foreground font-medium">

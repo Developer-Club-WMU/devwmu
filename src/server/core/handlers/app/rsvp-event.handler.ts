@@ -3,12 +3,18 @@ import { Effect } from 'effect'
 import { EventService, EventServiceLayer } from '../../domain/events.service'
 import { z } from 'zod'
 
-export const getPublicEventsFn = createServerFn()
-  .inputValidator(z.object({ userId: z.string().optional() }).optional())
+export const rsvpEventSchema = z.object({
+  eventId: z.string().min(1),
+  userId: z.string().min(1),
+  status: z.boolean(),
+})
+
+export const rsvpEventFn = createServerFn()
+  .inputValidator(rsvpEventSchema)
   .handler(async ({ data }) => {
     const program = Effect.gen(function* () {
       const service = yield* EventService
-      return yield* service.getPublicEvents(data)
+      return yield* service.rsvpEvent(data)
     })
 
     const runnable = program.pipe(Effect.provide(EventServiceLayer))

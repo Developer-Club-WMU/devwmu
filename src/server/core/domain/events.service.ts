@@ -36,19 +36,29 @@ interface EventServiceMethods {
     id?: string
   }) => Effect.Effect<Event, PrismaError>
 
-  readonly listEvents: () => Effect.Effect<Event[], PrismaError>
+  readonly listEvents: (args?: {
+    userId?: string
+  }) => Effect.Effect<any[], PrismaError>
 
   readonly getEventById: (
     id: string,
   ) => Effect.Effect<Event, PrismaError | NotFoundError>
 
-  readonly getPublicEvents: () => Effect.Effect<
-    { upcoming: Event[]; past: Event[]; ongoing: Event[] },
+  readonly getPublicEvents: (args?: {
+    userId?: string
+  }) => Effect.Effect<
+    { upcoming: any[]; past: any[]; ongoing: any[] },
     PrismaError
   >
   readonly getPublicEventById: (
     id: string,
   ) => Effect.Effect<Event, PrismaError | NotFoundError>
+
+  readonly rsvpEvent: (args: {
+    eventId: string
+    userId: string
+    status: boolean
+  }) => Effect.Effect<any, PrismaError>
 }
 
 /**
@@ -104,9 +114,22 @@ export const EventServiceLive = Layer.effect(
       /**
        * Lists all events ordered by start time.
        */
-      listEvents: () =>
+      listEvents: (args) =>
         Effect.tryPromise({
-          try: () => dbClient.event.findMany({ orderBy: { startTime: 'asc' } }),
+          try: () =>
+            dbClient.event.findMany({
+              orderBy: { startTime: 'asc' },
+              include: {
+                _count: {
+                  select: { attendees: true },
+                },
+                attendees: args?.userId
+                  ? {
+                      where: { userId: args.userId },
+                    }
+                  : false,
+              },
+            }),
           catch: () =>
             new PrismaError({
               message: 'Failed to fetch events',
@@ -131,10 +154,21 @@ export const EventServiceLive = Layer.effect(
           ),
         ),
 
-      getPublicEvents: () =>
+      getPublicEvents: (args) =>
         Effect.tryPromise({
           try: async () => {
             const now = new Date()
+            const include = {
+              _count: {
+                select: { attendees: true },
+              },
+              attendees: args?.userId
+                ? {
+                    where: { userId: args.userId },
+                  }
+                : false,
+            }
+
             const [ongoing, upcoming, past] = await Promise.all([
               dbClient.event.findMany({
                 where: {
@@ -144,6 +178,7 @@ export const EventServiceLive = Layer.effect(
                   endTime: { gte: now },
                 },
                 orderBy: { startTime: 'asc' },
+                include,
               }),
               dbClient.event.findMany({
                 where: {
@@ -152,6 +187,7 @@ export const EventServiceLive = Layer.effect(
                   startTime: { gt: now },
                 },
                 orderBy: { startTime: 'asc' },
+                include,
               }),
               dbClient.event.findMany({
                 where: {
@@ -161,6 +197,7 @@ export const EventServiceLive = Layer.effect(
                 },
                 orderBy: { endTime: 'desc' },
                 take: 10,
+                include,
               }),
             ])
             return { ongoing, upcoming, past }
@@ -190,6 +227,41 @@ export const EventServiceLive = Layer.effect(
                 ),
           ),
         ),
+
+      /**
+       * RSVPs to an event for a specific user.
+       */
+      rsvpEvent: ({ eventId, userId, status }) =>
+        Effect.tryPromise({
+          try: () => {
+            if (status) {
+              return dbClient.eventAttendee.upsert({
+                where: {
+                  eventId_userId: {
+                    eventId,
+                    userId,
+                  },
+                },
+                create: {
+                  eventId,
+                  userId,
+                },
+                update: {},
+              })
+            }
+            return dbClient.eventAttendee.delete({
+              where: {
+                eventId_userId: {
+                  eventId,
+                  userId,
+                },
+              },
+            })
+          },
+          catch: (_e: any) => {
+            return new PrismaError({ message: 'Failed to update RSVP' })
+          },
+        }),
     }
   }),
 )
