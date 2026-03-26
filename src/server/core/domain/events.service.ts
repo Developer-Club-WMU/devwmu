@@ -161,6 +161,8 @@ export const EventServiceLive = Layer.effect(
                         name: true,
                         email: true,
                         image: true,
+                        level: true,
+                        title: true,
                       },
                     },
                   },

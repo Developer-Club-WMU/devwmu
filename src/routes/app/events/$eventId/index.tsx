@@ -222,7 +222,14 @@ function EventDetailsPage() {
                                   {attendee.user.name.charAt(0)}
                                 </div>
                               )}
-                              <span className="font-bold text-slate-700">{attendee.user.name}</span>
+                            <div className="flex flex-col">
+                              <span className="font-bold text-slate-700 leading-tight">{attendee.user.name}</span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="text-[9px] font-black text-primary uppercase tracking-widest">{attendee.user.title}</span>
+                                <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">LVL {attendee.user.level}</span>
+                              </div>
+                            </div>
                             </div>
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground font-medium lowercase">

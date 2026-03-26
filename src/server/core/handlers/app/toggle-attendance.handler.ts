@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
-import { Effect } from 'effect'
+import { Effect, Layer } from 'effect'
 import { EventService, EventServiceLayer } from '../../domain/events.service'
+import { ProgressionService, ProgressionServiceLayer } from '../../domain/progression.service'
 import { z } from 'zod'
 import { assertOfficerFn } from '@/server/helpers/route-protection'
 
@@ -13,10 +14,22 @@ export const toggleAttendanceFn = createServerFn()
     await assertOfficerFn()
     
     const program = Effect.gen(function* () {
-      const service = yield* EventService
-      return yield* service.toggleAttendance(data)
+      const eventService = yield* EventService
+      const progressionService = yield* ProgressionService
+      
+      const attendee = yield* eventService.toggleAttendance(data)
+      
+      if (data.attended) {
+        yield* progressionService.awardAttendanceXP({
+          eventId: attendee.eventId,
+          userId: attendee.userId
+        })
+      }
+      
+      return attendee
     })
 
-    const runnable = program.pipe(Effect.provide(EventServiceLayer))
+    const combinedLayer = Layer.merge(EventServiceLayer, ProgressionServiceLayer)
+    const runnable = program.pipe(Effect.provide(combinedLayer))
     return Effect.runPromise(runnable)
   })

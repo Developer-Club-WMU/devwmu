@@ -1053,7 +1053,9 @@ export const UserScalarFieldEnum = {
   banExpires: 'banExpires',
   level: 'level',
   xp: 'xp',
-  title: 'title'
+  title: 'title',
+  streak: 'streak',
+  lastEventDate: 'lastEventDate'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

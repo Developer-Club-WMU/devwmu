@@ -29,11 +29,13 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   level: number | null
   xp: number | null
+  streak: number | null
 }
 
 export type UserSumAggregateOutputType = {
   level: number | null
   xp: number | null
+  streak: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -51,6 +53,8 @@ export type UserMinAggregateOutputType = {
   level: number | null
   xp: number | null
   title: $Enums.UserTitle | null
+  streak: number | null
+  lastEventDate: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -68,6 +72,8 @@ export type UserMaxAggregateOutputType = {
   level: number | null
   xp: number | null
   title: $Enums.UserTitle | null
+  streak: number | null
+  lastEventDate: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -85,6 +91,8 @@ export type UserCountAggregateOutputType = {
   level: number
   xp: number
   title: number
+  streak: number
+  lastEventDate: number
   _all: number
 }
 
@@ -92,11 +100,13 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   level?: true
   xp?: true
+  streak?: true
 }
 
 export type UserSumAggregateInputType = {
   level?: true
   xp?: true
+  streak?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -114,6 +124,8 @@ export type UserMinAggregateInputType = {
   level?: true
   xp?: true
   title?: true
+  streak?: true
+  lastEventDate?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -131,6 +143,8 @@ export type UserMaxAggregateInputType = {
   level?: true
   xp?: true
   title?: true
+  streak?: true
+  lastEventDate?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -148,6 +162,8 @@ export type UserCountAggregateInputType = {
   level?: true
   xp?: true
   title?: true
+  streak?: true
+  lastEventDate?: true
   _all?: true
 }
 
@@ -252,6 +268,8 @@ export type UserGroupByOutputType = {
   level: number
   xp: number
   title: $Enums.UserTitle
+  streak: number
+  lastEventDate: Date | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -292,6 +310,8 @@ export type UserWhereInput = {
   level?: Prisma.IntFilter<"User"> | number
   xp?: Prisma.IntFilter<"User"> | number
   title?: Prisma.EnumUserTitleFilter<"User"> | $Enums.UserTitle
+  streak?: Prisma.IntFilter<"User"> | number
+  lastEventDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   events?: Prisma.EventListRelationFilter
@@ -313,6 +333,8 @@ export type UserOrderByWithRelationInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
+  lastEventDate?: Prisma.SortOrderInput | Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
@@ -337,6 +359,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   level?: Prisma.IntFilter<"User"> | number
   xp?: Prisma.IntFilter<"User"> | number
   title?: Prisma.EnumUserTitleFilter<"User"> | $Enums.UserTitle
+  streak?: Prisma.IntFilter<"User"> | number
+  lastEventDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   events?: Prisma.EventListRelationFilter
@@ -358,6 +382,8 @@ export type UserOrderByWithAggregationInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
+  lastEventDate?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -383,6 +409,8 @@ export type UserScalarWhereWithAggregatesInput = {
   level?: Prisma.IntWithAggregatesFilter<"User"> | number
   xp?: Prisma.IntWithAggregatesFilter<"User"> | number
   title?: Prisma.EnumUserTitleWithAggregatesFilter<"User"> | $Enums.UserTitle
+  streak?: Prisma.IntWithAggregatesFilter<"User"> | number
+  lastEventDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
 
 export type UserCreateInput = {
@@ -400,6 +428,8 @@ export type UserCreateInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
@@ -421,6 +451,8 @@ export type UserUncheckedCreateInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
@@ -442,6 +474,8 @@ export type UserUpdateInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
@@ -463,6 +497,8 @@ export type UserUncheckedUpdateInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -484,6 +520,8 @@ export type UserCreateManyInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -501,6 +539,8 @@ export type UserUpdateManyMutationInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -518,6 +558,8 @@ export type UserUncheckedUpdateManyInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -535,11 +577,14 @@ export type UserCountOrderByAggregateInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
+  lastEventDate?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -557,6 +602,8 @@ export type UserMaxOrderByAggregateInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
+  lastEventDate?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -574,11 +621,14 @@ export type UserMinOrderByAggregateInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
+  lastEventDate?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   level?: Prisma.SortOrder
   xp?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -693,6 +743,8 @@ export type UserCreateWithoutSessionsInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
@@ -713,6 +765,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
@@ -749,6 +803,8 @@ export type UserUpdateWithoutSessionsInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
@@ -769,6 +825,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
@@ -789,6 +847,8 @@ export type UserCreateWithoutAccountsInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
@@ -809,6 +869,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
@@ -845,6 +907,8 @@ export type UserUpdateWithoutAccountsInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
@@ -865,6 +929,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
@@ -885,6 +951,8 @@ export type UserCreateWithoutEventsInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
@@ -905,6 +973,8 @@ export type UserUncheckedCreateWithoutEventsInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
@@ -941,6 +1011,8 @@ export type UserUpdateWithoutEventsInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
@@ -961,6 +1033,8 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
@@ -981,6 +1055,8 @@ export type UserCreateWithoutEventAttendeesInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
@@ -1001,6 +1077,8 @@ export type UserUncheckedCreateWithoutEventAttendeesInput = {
   level?: number
   xp?: number
   title?: $Enums.UserTitle
+  streak?: number
+  lastEventDate?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1037,6 +1115,8 @@ export type UserUpdateWithoutEventAttendeesInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
@@ -1057,6 +1137,8 @@ export type UserUncheckedUpdateWithoutEventAttendeesInput = {
   level?: Prisma.IntFieldUpdateOperationsInput | number
   xp?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
+  lastEventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1135,6 +1217,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   level?: boolean
   xp?: boolean
   title?: boolean
+  streak?: boolean
+  lastEventDate?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
@@ -1157,6 +1241,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   level?: boolean
   xp?: boolean
   title?: boolean
+  streak?: boolean
+  lastEventDate?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1174,6 +1260,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   level?: boolean
   xp?: boolean
   title?: boolean
+  streak?: boolean
+  lastEventDate?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1191,9 +1279,11 @@ export type UserSelectScalar = {
   level?: boolean
   xp?: boolean
   title?: boolean
+  streak?: boolean
+  lastEventDate?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "role" | "banned" | "banReason" | "banExpires" | "level" | "xp" | "title", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "role" | "banned" | "banReason" | "banExpires" | "level" | "xp" | "title" | "streak" | "lastEventDate", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1227,6 +1317,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     level: number
     xp: number
     title: $Enums.UserTitle
+    streak: number
+    lastEventDate: Date | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1668,6 +1760,8 @@ export interface UserFieldRefs {
   readonly level: Prisma.FieldRef<"User", 'Int'>
   readonly xp: Prisma.FieldRef<"User", 'Int'>
   readonly title: Prisma.FieldRef<"User", 'UserTitle'>
+  readonly streak: Prisma.FieldRef<"User", 'Int'>
+  readonly lastEventDate: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
