@@ -10,12 +10,39 @@ export const getSession = createServerFn().handler(async () => {
 
 export const assertSessionFn = createServerFn().handler(async () => {
   const session = await getSession()
-  if (session && session.session) throw redirect({ to: '/app' })
+  if (
+    session &&
+    session.session &&
+    session.user.role &&
+    /admin/.test(session.user.role)
+  )
+    throw redirect({ to: '/app' })
+  else if (
+    session &&
+    session.session &&
+    session.user.role &&
+    /user/.test(session.user.role)
+  )
+    throw redirect({ to: '/member' })
 })
 
 export const assertAuthenticatedFn = createServerFn().handler(async () => {
   const session = await getSession()
   if (!session || !session.user || !session.session)
     throw redirect({ to: '/sign-in' })
+  return session
+})
+
+export const assertOfficerFn = createServerFn().handler(async () => {
+  const session = await assertAuthenticatedFn()
+  if (session?.user.role && !/admin/.test(session.user.role))
+    throw redirect({ to: '/unauthorized' })
+  return session
+})
+
+export const assertMemberFn = createServerFn().handler(async () => {
+  const session = await assertAuthenticatedFn()
+  if (session?.user.role && !/user/.test(session.user.role))
+    throw redirect({ to: '/unauthorized' })
   return session
 })

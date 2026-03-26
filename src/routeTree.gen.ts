@@ -9,8 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as MemberRouteRouteImport } from './routes/member/route'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as MemberIndexRouteImport } from './routes/member/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AppMembersIndexRouteImport } from './routes/app/members/index'
@@ -23,6 +26,16 @@ import { Route as AppEventsEventIdRouteImport } from './routes/app/events/$event
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as PublicEventsEventIdRouteImport } from './routes/_public/events/$eventId'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemberRouteRoute = MemberRouteRouteImport.update({
+  id: '/member',
+  path: '/member',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
   path: '/app',
@@ -31,6 +44,11 @@ const AppRouteRoute = AppRouteRouteImport.update({
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MemberIndexRoute = MemberIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MemberRouteRoute,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
@@ -91,7 +109,10 @@ const PublicEventsEventIdRoute = PublicEventsEventIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/app': typeof AppRouteRouteWithChildren
+  '/member': typeof MemberRouteRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/app/': typeof AppIndexRoute
+  '/member/': typeof MemberIndexRoute
   '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
@@ -103,8 +124,10 @@ export interface FileRoutesByFullPath {
   '/app/members/': typeof AppMembersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/unauthorized': typeof UnauthorizedRoute
   '/': typeof PublicIndexRoute
   '/app': typeof AppIndexRoute
+  '/member': typeof MemberIndexRoute
   '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
@@ -119,8 +142,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteRouteWithChildren
   '/app': typeof AppRouteRouteWithChildren
+  '/member': typeof MemberRouteRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/_public/': typeof PublicIndexRoute
   '/app/': typeof AppIndexRoute
+  '/member/': typeof MemberIndexRoute
   '/_public/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/$eventId': typeof AppEventsEventIdRoute
@@ -136,7 +162,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/member'
+    | '/unauthorized'
     | '/app/'
+    | '/member/'
     | '/events/$eventId'
     | '/api/auth/$'
     | '/app/events/$eventId'
@@ -148,8 +177,10 @@ export interface FileRouteTypes {
     | '/app/members/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/unauthorized'
     | '/'
     | '/app'
+    | '/member'
     | '/events/$eventId'
     | '/api/auth/$'
     | '/app/events/$eventId'
@@ -163,8 +194,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_public'
     | '/app'
+    | '/member'
+    | '/unauthorized'
     | '/_public/'
     | '/app/'
+    | '/member/'
     | '/_public/events/$eventId'
     | '/api/auth/$'
     | '/app/events/$eventId'
@@ -179,11 +213,27 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  MemberRouteRoute: typeof MemberRouteRouteWithChildren
+  UnauthorizedRoute: typeof UnauthorizedRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/member': {
+      id: '/member'
+      path: '/member'
+      fullPath: '/member'
+      preLoaderRoute: typeof MemberRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -197,6 +247,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/member/': {
+      id: '/member/'
+      path: '/'
+      fullPath: '/member/'
+      preLoaderRoute: typeof MemberIndexRouteImport
+      parentRoute: typeof MemberRouteRoute
     }
     '/app/': {
       id: '/app/'
@@ -318,9 +375,23 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface MemberRouteRouteChildren {
+  MemberIndexRoute: typeof MemberIndexRoute
+}
+
+const MemberRouteRouteChildren: MemberRouteRouteChildren = {
+  MemberIndexRoute: MemberIndexRoute,
+}
+
+const MemberRouteRouteWithChildren = MemberRouteRoute._addFileChildren(
+  MemberRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   PublicRouteRoute: PublicRouteRouteWithChildren,
   AppRouteRoute: AppRouteRouteWithChildren,
+  MemberRouteRoute: MemberRouteRouteWithChildren,
+  UnauthorizedRoute: UnauthorizedRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,25 +1,31 @@
-import { assertAuthenticatedFn } from '@/server/helpers/route-protection'
+import { assertOfficerFn } from '@/server/helpers/route-protection'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { listEventsFn } from '@/server/core/handlers/app/list-events.handler'
 import { authClient } from '@/lib/auth-client'
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  ChevronRight, 
-  Trophy, 
-  Users, 
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  ChevronRight,
+  Trophy,
+  Users,
   Zap,
-  LayoutDashboard
+  LayoutDashboard,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/app/')({
   component: Dashboard,
-  beforeLoad: () => assertAuthenticatedFn(),
+  beforeLoad: () => assertOfficerFn(),
 })
 
 function Dashboard() {
@@ -33,18 +39,24 @@ function Dashboard() {
 
   // Handle Event Categorization
   const now = new Date()
-  const ongoing = events?.filter(e => {
-    const start = new Date(e.startTime)
-    const end = new Date(e.endTime)
-    return now >= start && now <= end
-  }) || []
+  const ongoing =
+    events?.filter((e) => {
+      const start = new Date(e.startTime)
+      const end = new Date(e.endTime)
+      return now >= start && now <= end
+    }) || []
 
-  const upcoming = events?.filter(e => {
-    const start = new Date(e.startTime)
-    return start > now
-  })
-  .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
-  .slice(0, 5) || []
+  const upcoming =
+    events
+      ?.filter((e) => {
+        const start = new Date(e.startTime)
+        return start > now
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+      )
+      .slice(0, 5) || []
 
   if (isLoading) {
     return (
@@ -61,19 +73,26 @@ function Dashboard() {
         <div>
           <div className="flex items-center gap-2 text-primary mb-2">
             <LayoutDashboard className="w-5 h-5" />
-            <span className="text-sm font-bold uppercase tracking-wider">Member Dashboard</span>
+            <span className="text-sm font-bold uppercase tracking-wider">
+              Member Dashboard
+            </span>
           </div>
           <h1 className="text-4xl font-black tracking-tight">
-            Welcome back, <span className="text-primary">{user?.name?.split(' ')[0] || 'Member'}</span>!
+            Welcome back,{' '}
+            <span className="text-primary">
+              {user?.name?.split(' ')[0] || 'Member'}
+            </span>
+            !
           </h1>
-          <p className="text-muted-foreground font-medium">Here's what's happening in the club.</p>
+          <p className="text-muted-foreground font-medium">
+            Here's what's happening in the club.
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Feed: Events */}
         <div className="lg:col-span-2 space-y-8">
-          
           {/* Ongoing Events */}
           {ongoing.length > 0 && (
             <section>
@@ -82,28 +101,40 @@ function Dashboard() {
                 Ongoing Sessions
               </h2>
               <div className="space-y-4">
-                {ongoing.map(event => (
-                  <Card key={event.id} className="relative overflow-hidden border-yellow-500/30 bg-yellow-500/5 hover:bg-yellow-500/10 transition-colors">
+                {ongoing.map((event) => (
+                  <Card
+                    key={event.id}
+                    className="relative overflow-hidden border-yellow-500/30 bg-yellow-500/5 hover:bg-yellow-500/10 transition-colors"
+                  >
                     <CardHeader className="p-5 pb-2">
                       <div className="flex justify-between items-start">
-                        <Badge variant="destructive" className="animate-pulse mb-2">LIVE NOW</Badge>
-                        <Link 
-                          to="/app/events/$eventId" 
+                        <Badge
+                          variant="destructive"
+                          className="animate-pulse mb-2"
+                        >
+                          LIVE NOW
+                        </Badge>
+                        <Link
+                          to="/app/events/$eventId"
                           params={{ eventId: event.id }}
                           className="text-xs font-bold uppercase text-yellow-600 hover:text-yellow-700 flex items-center"
                         >
                           View Details <ChevronRight className="w-3 h-3" />
                         </Link>
                       </div>
-                      <CardTitle className="text-xl font-black">{event.title}</CardTitle>
+                      <CardTitle className="text-xl font-black">
+                        {event.title}
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="p-5 pt-0">
                       <div className="flex flex-wrap gap-4 text-sm font-medium text-muted-foreground">
                         <div className="flex items-center gap-1.5">
-                          <MapPin className="w-4 h-4" /> {event.location || 'Online'}
+                          <MapPin className="w-4 h-4" />{' '}
+                          {event.location || 'Online'}
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Clock className="w-4 h-4" /> Until {format(new Date(event.endTime), 'h:mm a')}
+                          <Clock className="w-4 h-4" /> Until{' '}
+                          {format(new Date(event.endTime), 'h:mm a')}
                         </div>
                       </div>
                     </CardContent>
@@ -120,27 +151,33 @@ function Dashboard() {
                 <Calendar className="w-6 h-6 text-primary" />
                 Upcoming Events
               </h2>
-              <Link 
-                to="/app/events" 
+              <Link
+                to="/app/events"
                 className="text-sm font-bold uppercase text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
               >
                 Full Calendar <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {upcoming.map(event => (
-                <Card key={event.id} className="hover:border-primary/50 transition-all duration-300 group">
+              {upcoming.map((event) => (
+                <Card
+                  key={event.id}
+                  className="hover:border-primary/50 transition-all duration-300 group"
+                >
                   <CardHeader className="p-5">
                     <div className="text-xs font-bold text-primary uppercase tracking-widest mb-2">
                       {format(new Date(event.startTime), 'MMMM do')}
                     </div>
-                    <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors line-clamp-1">{event.title}</CardTitle>
+                    <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors line-clamp-1">
+                      {event.title}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="p-5 pt-0">
                     <div className="flex flex-col gap-2 text-sm text-muted-foreground font-medium">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4" /> {format(new Date(event.startTime), 'h:mm a')}
+                        <Clock className="w-4 h-4" />{' '}
+                        {format(new Date(event.startTime), 'h:mm a')}
                       </div>
                       <div className="flex items-center gap-1.5">
                         <MapPin className="w-4 h-4" /> {event.location || 'TBA'}
@@ -167,17 +204,23 @@ function Dashboard() {
               <Trophy className="w-32 h-32" />
             </div>
             <CardHeader>
-              <CardTitle className="text-xl font-black uppercase">Your Journey</CardTitle>
-              <CardDescription className="text-public-bg/70 font-bold italic">Dev Club Member</CardDescription>
+              <CardTitle className="text-xl font-black uppercase">
+                Your Journey
+              </CardTitle>
+              <CardDescription className="text-public-bg/70 font-bold italic">
+                Dev Club Member
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-3 bg-public-bg/10 rounded-xl backdrop-blur-md border border-public-bg/10">
-                   <Users className="w-8 h-8" />
+                  <Users className="w-8 h-8" />
                 </div>
                 <div>
                   <div className="text-2xl font-black">Level 1</div>
-                  <div className="text-xs uppercase font-bold tracking-widest opacity-80">Rookie Developer</div>
+                  <div className="text-xs uppercase font-bold tracking-widest opacity-80">
+                    Rookie Developer
+                  </div>
                 </div>
               </div>
               <div className="w-full py-3 bg-public-bg text-public-accent rounded-lg font-black uppercase text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-public-bg/90 transition-colors shadow-lg">
@@ -189,18 +232,29 @@ function Dashboard() {
           {/* Quick Actions */}
           <Card>
             <CardHeader>
-                <CardTitle className="text-lg font-black uppercase">Quick Actions</CardTitle>
+              <CardTitle className="text-lg font-black uppercase">
+                Quick Actions
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="flex flex-col divide-y transition-all">
-                <Link to="/app/events" className="p-4 flex items-center justify-between hover:bg-muted font-bold text-sm">
-                  Register for Hackathon <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                <Link
+                  to="/app/events"
+                  className="p-4 flex items-center justify-between hover:bg-muted font-bold text-sm"
+                >
+                  Register for Hackathon{' '}
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </Link>
-                <Link to="/app/events/create" className="p-4 flex items-center justify-between hover:bg-muted font-bold text-sm">
-                  Propose an Event <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                <Link
+                  to="/app/events/create"
+                  className="p-4 flex items-center justify-between hover:bg-muted font-bold text-sm"
+                >
+                  Propose an Event{' '}
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </Link>
                 <div className="p-4 flex items-center justify-between hover:bg-muted font-bold text-sm cursor-pointer">
-                  Project Submission <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  Project Submission{' '}
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
               </div>
             </CardContent>

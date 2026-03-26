@@ -21,7 +21,7 @@ export const auth = betterAuth({
   }),
   plugins: [
     admin({
-      defaultRole: 'admin',
+      // defaultRole: 'admin',
     }),
     tanstackStartCookies(),
   ],

@@ -1,4 +1,4 @@
-import { assertAuthenticatedFn } from '@/server/helpers/route-protection'
+import { assertOfficerFn } from '@/server/helpers/route-protection'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { authClient } from '@/lib/auth-client'
@@ -43,7 +43,7 @@ import { useState } from 'react'
 
 export const Route = createFileRoute('/app/members/')({
   component: MembersPage,
-  beforeLoad: () => assertAuthenticatedFn(),
+  beforeLoad: () => assertOfficerFn(),
 })
 
 type User = {
