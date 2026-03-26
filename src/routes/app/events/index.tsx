@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Edit2, Plus } from 'lucide-react'
+import { Edit2, Eye, Plus } from 'lucide-react'
 import { EventStatus } from 'generated/enums'
 
 export const Route = createFileRoute('/app/events/')({
@@ -48,7 +48,9 @@ function EventsTablePage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Events</h1>
-          <p className="text-muted-foreground">Manage club events and workshops.</p>
+          <p className="text-muted-foreground">
+            Manage club events and workshops.
+          </p>
         </div>
         <Link to="/app/events/create">
           <Button>
@@ -79,7 +81,10 @@ function EventsTablePage() {
               </TableRow>
             ) : events?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center h-24 text-muted-foreground">
+                <TableCell
+                  colSpan={6}
+                  className="text-center h-24 text-muted-foreground"
+                >
                   No events found. Create one to get started.
                 </TableCell>
               </TableRow>
@@ -88,7 +93,11 @@ function EventsTablePage() {
                 <TableRow key={event.id}>
                   <TableCell className="font-medium">{event.title}</TableCell>
                   <TableCell>
-                    <Badge variant={getStatusBadgeVariant(event.status as EventStatus)}>
+                    <Badge
+                      variant={getStatusBadgeVariant(
+                        event.status as EventStatus,
+                      )}
+                    >
                       {event.status}
                     </Badge>
                   </TableCell>
@@ -102,15 +111,26 @@ function EventsTablePage() {
                     {event._count?.attendees || 0}
                   </TableCell>
                   <TableCell>
-                    <Link
-                      to="/app/events/$eventId"
-                      params={{ eventId: event.id }}
-                    >
-                      <Button variant="ghost" size="icon">
-                        <Edit2 className="h-4 w-4" />
-                        <span className="sr-only">Edit</span>
-                      </Button>
-                    </Link>
+                    <div className="flex items-center gap-1">
+                      <Link
+                        to="/app/events/$eventId"
+                        params={{ eventId: event.id }}
+                      >
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                          <span className="sr-only">View</span>
+                        </Button>
+                      </Link>
+                      <Link
+                        to="/app/events/$eventId/edit"
+                        params={{ eventId: event.id }}
+                      >
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Edit2 className="h-4 w-4 text-muted-foreground" />
+                          <span className="sr-only">Edit</span>
+                        </Button>
+                      </Link>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

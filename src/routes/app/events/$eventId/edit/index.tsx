@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from 'sonner'
 import { authClient } from '@/lib/auth-client'
 
-export const Route = createFileRoute('/app/events/$eventId')({
+export const Route = createFileRoute('/app/events/$eventId/edit/')({
   component: EditEventPage,
 })
 

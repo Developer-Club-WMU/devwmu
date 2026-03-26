@@ -23,9 +23,10 @@ import { Route as PublicSignInIndexRouteImport } from './routes/_public/sign-in/
 import { Route as PublicEventsIndexRouteImport } from './routes/_public/events/index'
 import { Route as PublicAboutIndexRouteImport } from './routes/_public/about/index'
 import { Route as AppEventsCreateRouteImport } from './routes/app/events/create'
-import { Route as AppEventsEventIdRouteImport } from './routes/app/events/$eventId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as PublicEventsEventIdRouteImport } from './routes/_public/events/$eventId'
+import { Route as AppEventsEventIdIndexRouteImport } from './routes/app/events/$eventId/index'
+import { Route as AppEventsEventIdEditIndexRouteImport } from './routes/app/events/$eventId/edit/index'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -96,11 +97,6 @@ const AppEventsCreateRoute = AppEventsCreateRouteImport.update({
   path: '/events/create',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppEventsEventIdRoute = AppEventsEventIdRouteImport.update({
-  id: '/events/$eventId',
-  path: '/events/$eventId',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -111,6 +107,17 @@ const PublicEventsEventIdRoute = PublicEventsEventIdRouteImport.update({
   path: '/events/$eventId',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const AppEventsEventIdIndexRoute = AppEventsEventIdIndexRouteImport.update({
+  id: '/events/$eventId/',
+  path: '/events/$eventId/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppEventsEventIdEditIndexRoute =
+  AppEventsEventIdEditIndexRouteImport.update({
+    id: '/events/$eventId/edit/',
+    path: '/events/$eventId/edit/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -122,13 +129,14 @@ export interface FileRoutesByFullPath {
   '/member/': typeof MemberIndexRoute
   '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
   '/about/': typeof PublicAboutIndexRoute
   '/events/': typeof PublicEventsIndexRoute
   '/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
   '/app/members/': typeof AppMembersIndexRoute
+  '/app/events/$eventId/': typeof AppEventsEventIdIndexRoute
+  '/app/events/$eventId/edit/': typeof AppEventsEventIdEditIndexRoute
 }
 export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
@@ -138,13 +146,14 @@ export interface FileRoutesByTo {
   '/member': typeof MemberIndexRoute
   '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
   '/about': typeof PublicAboutIndexRoute
   '/events': typeof PublicEventsIndexRoute
   '/sign-in': typeof PublicSignInIndexRoute
   '/app/events': typeof AppEventsIndexRoute
   '/app/members': typeof AppMembersIndexRoute
+  '/app/events/$eventId': typeof AppEventsEventIdIndexRoute
+  '/app/events/$eventId/edit': typeof AppEventsEventIdEditIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -158,13 +167,14 @@ export interface FileRoutesById {
   '/member/': typeof MemberIndexRoute
   '/_public/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/app/events/$eventId': typeof AppEventsEventIdRoute
   '/app/events/create': typeof AppEventsCreateRoute
   '/_public/about/': typeof PublicAboutIndexRoute
   '/_public/events/': typeof PublicEventsIndexRoute
   '/_public/sign-in/': typeof PublicSignInIndexRoute
   '/app/events/': typeof AppEventsIndexRoute
   '/app/members/': typeof AppMembersIndexRoute
+  '/app/events/$eventId/': typeof AppEventsEventIdIndexRoute
+  '/app/events/$eventId/edit/': typeof AppEventsEventIdEditIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -178,13 +188,14 @@ export interface FileRouteTypes {
     | '/member/'
     | '/events/$eventId'
     | '/api/auth/$'
-    | '/app/events/$eventId'
     | '/app/events/create'
     | '/about/'
     | '/events/'
     | '/sign-in/'
     | '/app/events/'
     | '/app/members/'
+    | '/app/events/$eventId/'
+    | '/app/events/$eventId/edit/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/dashboard'
@@ -194,13 +205,14 @@ export interface FileRouteTypes {
     | '/member'
     | '/events/$eventId'
     | '/api/auth/$'
-    | '/app/events/$eventId'
     | '/app/events/create'
     | '/about'
     | '/events'
     | '/sign-in'
     | '/app/events'
     | '/app/members'
+    | '/app/events/$eventId'
+    | '/app/events/$eventId/edit'
   id:
     | '__root__'
     | '/_public'
@@ -213,13 +225,14 @@ export interface FileRouteTypes {
     | '/member/'
     | '/_public/events/$eventId'
     | '/api/auth/$'
-    | '/app/events/$eventId'
     | '/app/events/create'
     | '/_public/about/'
     | '/_public/events/'
     | '/_public/sign-in/'
     | '/app/events/'
     | '/app/members/'
+    | '/app/events/$eventId/'
+    | '/app/events/$eventId/edit/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -331,13 +344,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEventsCreateRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/events/$eventId': {
-      id: '/app/events/$eventId'
-      path: '/events/$eventId'
-      fullPath: '/app/events/$eventId'
-      preLoaderRoute: typeof AppEventsEventIdRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -351,6 +357,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/events/$eventId'
       preLoaderRoute: typeof PublicEventsEventIdRouteImport
       parentRoute: typeof PublicRouteRoute
+    }
+    '/app/events/$eventId/': {
+      id: '/app/events/$eventId/'
+      path: '/events/$eventId'
+      fullPath: '/app/events/$eventId/'
+      preLoaderRoute: typeof AppEventsEventIdIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/events/$eventId/edit/': {
+      id: '/app/events/$eventId/edit/'
+      path: '/events/$eventId/edit'
+      fullPath: '/app/events/$eventId/edit/'
+      preLoaderRoute: typeof AppEventsEventIdEditIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
   }
 }
@@ -377,18 +397,20 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
-  AppEventsEventIdRoute: typeof AppEventsEventIdRoute
   AppEventsCreateRoute: typeof AppEventsCreateRoute
   AppEventsIndexRoute: typeof AppEventsIndexRoute
   AppMembersIndexRoute: typeof AppMembersIndexRoute
+  AppEventsEventIdIndexRoute: typeof AppEventsEventIdIndexRoute
+  AppEventsEventIdEditIndexRoute: typeof AppEventsEventIdEditIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
-  AppEventsEventIdRoute: AppEventsEventIdRoute,
   AppEventsCreateRoute: AppEventsCreateRoute,
   AppEventsIndexRoute: AppEventsIndexRoute,
   AppMembersIndexRoute: AppMembersIndexRoute,
+  AppEventsEventIdIndexRoute: AppEventsEventIdIndexRoute,
+  AppEventsEventIdEditIndexRoute: AppEventsEventIdEditIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

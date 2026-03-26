@@ -42,7 +42,7 @@ interface EventServiceMethods {
 
   readonly getEventById: (
     id: string,
-  ) => Effect.Effect<Event, PrismaError | NotFoundError>
+  ) => Effect.Effect<any, PrismaError | NotFoundError>
 
   readonly getPublicEvents: (args?: {
     userId?: string
@@ -141,7 +141,27 @@ export const EventServiceLive = Layer.effect(
        */
       getEventById: (id) =>
         Effect.tryPromise({
-          try: () => dbClient.event.findUnique({ where: { id } }),
+          try: () =>
+            dbClient.event.findUnique({
+              where: { id },
+              include: {
+                _count: {
+                  select: { attendees: true },
+                },
+                attendees: {
+                  include: {
+                    user: {
+                      select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true,
+                      },
+                    },
+                  },
+                },
+              },
+            }),
           catch: () =>
             new PrismaError({
               message: 'Database error fetching event',
