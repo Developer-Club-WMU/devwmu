@@ -191,7 +191,6 @@ function MembersPage() {
             className="pl-10 h-11 bg-background/50 border-muted group-hover:border-primary/50 focus-visible:ring-primary/20 transition-all rounded-xl shadow-sm"
             value={searchTerm}
             onChange={(e) => {
-              console.log(e.target.value)
               setSearchTerm(e.target.value)
               setPage(0)
             }}
