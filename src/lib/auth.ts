@@ -25,4 +25,17 @@ export const auth = betterAuth({
     }),
     tanstackStartCookies(),
   ],
+  user: {
+    additionalFields: {
+      level: {
+        type: 'number',
+      },
+      xp: {
+        type: 'number',
+      },
+      title: {
+        type: 'string',
+      },
+    },
+  },
 })

@@ -28,6 +28,14 @@ export const Route = createFileRoute('/app/')({
   beforeLoad: () => assertOfficerFn(),
 })
 
+const TITLE_MAP: Record<string, string> = {
+  ROOKIE: 'Rookie Developer',
+  APPRENTICE: 'Code Apprentice',
+  NINJA: 'Syntax Ninja',
+  ARCHITECT: 'Logic Architect',
+  WIZARD: 'Fullstack Wizard',
+}
+
 function Dashboard() {
   const { data: session } = authClient.useSession()
   const { data: events, isLoading } = useQuery({
@@ -35,7 +43,7 @@ function Dashboard() {
     queryFn: () => listEventsFn(),
   })
 
-  const user = session?.user
+  const user = session?.user as any
 
   // Handle Event Categorization
   const now = new Date()
@@ -208,7 +216,7 @@ function Dashboard() {
                 Your Journey
               </CardTitle>
               <CardDescription className="text-public-bg/70 font-bold italic">
-                Dev Club Member
+                Dev Club {user?.role === 'admin' ? 'Officer' : 'Member'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -217,9 +225,11 @@ function Dashboard() {
                   <Users className="w-8 h-8" />
                 </div>
                 <div>
-                  <div className="text-2xl font-black">Level 1</div>
+                  <div className="text-2xl font-black">
+                    Level {user?.level || 1}
+                  </div>
                   <div className="text-xs uppercase font-bold tracking-widest opacity-80">
-                    Rookie Developer
+                    {user?.title ? (TITLE_MAP[user.title] || user.title) : 'Rookie Developer'}
                   </div>
                 </div>
               </div>

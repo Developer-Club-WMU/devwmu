@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as MemberRouteRouteImport } from './routes/member/route'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
@@ -29,6 +30,11 @@ import { Route as PublicEventsEventIdRouteImport } from './routes/_public/events
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
   path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemberRouteRoute = MemberRouteRouteImport.update({
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/member': typeof MemberRouteRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/app/': typeof AppIndexRoute
   '/member/': typeof MemberIndexRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/app/members/': typeof AppMembersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/dashboard': typeof DashboardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/': typeof PublicIndexRoute
   '/app': typeof AppIndexRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteRouteWithChildren
   '/app': typeof AppRouteRouteWithChildren
   '/member': typeof MemberRouteRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_public/': typeof PublicIndexRoute
   '/app/': typeof AppIndexRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/member'
+    | '/dashboard'
     | '/unauthorized'
     | '/app/'
     | '/member/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/app/members/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/dashboard'
     | '/unauthorized'
     | '/'
     | '/app'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/app'
     | '/member'
+    | '/dashboard'
     | '/unauthorized'
     | '/_public/'
     | '/app/'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
   AppRouteRoute: typeof AppRouteRouteWithChildren
   MemberRouteRoute: typeof MemberRouteRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       path: '/unauthorized'
       fullPath: '/unauthorized'
       preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/member': {
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRouteRoute: PublicRouteRouteWithChildren,
   AppRouteRoute: AppRouteRouteWithChildren,
   MemberRouteRoute: MemberRouteRouteWithChildren,
+  DashboardRoute: DashboardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

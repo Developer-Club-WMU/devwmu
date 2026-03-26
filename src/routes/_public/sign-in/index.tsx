@@ -18,7 +18,7 @@ function SignIn() {
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/app',
+        callbackURL: '/dashboard',
       })
     } catch (error) {
       console.error('Failed to sign in:', error)

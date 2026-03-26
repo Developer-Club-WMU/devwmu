@@ -15,7 +15,8 @@ async function main() {
       name: 'Admin User',
       email: 'admin@devwmu.org',
       emailVerified: true,
-      role: 'admin'
+      role: 'admin',
+      title: 'ROOKIE'
     },
   })
 
@@ -24,13 +25,16 @@ async function main() {
   // Create or update a regular user
   const demoUser = await prisma.user.upsert({
     where: { email: 'member@devwmu.org' },
-    update: {},
+    update: {
+      title: 'ROOKIE'
+    },
     create: {
       id: 'user_member_001',
       name: 'Demo Member',
       email: 'member@devwmu.org',
       emailVerified: true,
-      role: 'user'
+      role: 'user',
+      title: 'ROOKIE'
     },
   })
 
@@ -46,7 +50,16 @@ async function main() {
     role: faker.helpers.arrayElement(['user', 'user', 'user', 'admin']), // mostly users
     createdAt: faker.date.past({ years: 1 }),
     banned: faker.datatype.boolean({ probability: 0.1 }),
-    banReason: null as string | null
+    banReason: null as string | null,
+    level: faker.number.int({ min: 1, max: 20 }),
+    xp: faker.number.int({ min: 0, max: 10000 }),
+    title: faker.helpers.arrayElement([
+      'ROOKIE',
+      'APPRENTICE',
+      'NINJA',
+      'ARCHITECT',
+      'WIZARD'
+    ])
   })).map(u => u.banned ? { ...u, banReason: 'Violation of Terms of Service' } : u)
 
   // Use upsert in a loop for fake members since SQLite doesn't support createMany

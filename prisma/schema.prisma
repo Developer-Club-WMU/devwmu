@@ -25,8 +25,20 @@ model User {
   banReason      String?
   banExpires     DateTime?
 
+  level          Int             @default(1)
+  xp             Int             @default(0)
+  title          UserTitle       @default(ROOKIE)
+
   @@unique([email])
   @@map("user")
+}
+
+enum UserTitle {
+  ROOKIE
+  APPRENTICE
+  NINJA
+  ARCHITECT
+  WIZARD
 }
 
 model Session {

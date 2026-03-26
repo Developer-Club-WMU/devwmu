@@ -20,8 +20,20 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  level: number | null
+  xp: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  level: number | null
+  xp: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -36,6 +48,9 @@ export type UserMinAggregateOutputType = {
   banned: boolean | null
   banReason: string | null
   banExpires: Date | null
+  level: number | null
+  xp: number | null
+  title: $Enums.UserTitle | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -50,6 +65,9 @@ export type UserMaxAggregateOutputType = {
   banned: boolean | null
   banReason: string | null
   banExpires: Date | null
+  level: number | null
+  xp: number | null
+  title: $Enums.UserTitle | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -64,9 +82,22 @@ export type UserCountAggregateOutputType = {
   banned: number
   banReason: number
   banExpires: number
+  level: number
+  xp: number
+  title: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  level?: true
+  xp?: true
+}
+
+export type UserSumAggregateInputType = {
+  level?: true
+  xp?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -80,6 +111,9 @@ export type UserMinAggregateInputType = {
   banned?: true
   banReason?: true
   banExpires?: true
+  level?: true
+  xp?: true
+  title?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -94,6 +128,9 @@ export type UserMaxAggregateInputType = {
   banned?: true
   banReason?: true
   banExpires?: true
+  level?: true
+  xp?: true
+  title?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -108,6 +145,9 @@ export type UserCountAggregateInputType = {
   banned?: true
   banReason?: true
   banExpires?: true
+  level?: true
+  xp?: true
+  title?: true
   _all?: true
 }
 
@@ -149,6 +189,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -179,6 +231,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -195,7 +249,12 @@ export type UserGroupByOutputType = {
   banned: boolean | null
   banReason: string | null
   banExpires: Date | null
+  level: number
+  xp: number
+  title: $Enums.UserTitle
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -230,6 +289,9 @@ export type UserWhereInput = {
   banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
   banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  level?: Prisma.IntFilter<"User"> | number
+  xp?: Prisma.IntFilter<"User"> | number
+  title?: Prisma.EnumUserTitleFilter<"User"> | $Enums.UserTitle
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   events?: Prisma.EventListRelationFilter
@@ -248,6 +310,9 @@ export type UserOrderByWithRelationInput = {
   banned?: Prisma.SortOrderInput | Prisma.SortOrder
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
@@ -269,6 +334,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
   banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  level?: Prisma.IntFilter<"User"> | number
+  xp?: Prisma.IntFilter<"User"> | number
+  title?: Prisma.EnumUserTitleFilter<"User"> | $Enums.UserTitle
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   events?: Prisma.EventListRelationFilter
@@ -287,9 +355,14 @@ export type UserOrderByWithAggregationInput = {
   banned?: Prisma.SortOrderInput | Prisma.SortOrder
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -307,6 +380,9 @@ export type UserScalarWhereWithAggregatesInput = {
   banned?: Prisma.BoolNullableWithAggregatesFilter<"User"> | boolean | null
   banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   banExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  level?: Prisma.IntWithAggregatesFilter<"User"> | number
+  xp?: Prisma.IntWithAggregatesFilter<"User"> | number
+  title?: Prisma.EnumUserTitleWithAggregatesFilter<"User"> | $Enums.UserTitle
 }
 
 export type UserCreateInput = {
@@ -321,6 +397,9 @@ export type UserCreateInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
@@ -339,6 +418,9 @@ export type UserUncheckedCreateInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
@@ -357,6 +439,9 @@ export type UserUpdateInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
@@ -375,6 +460,9 @@ export type UserUncheckedUpdateInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -393,6 +481,9 @@ export type UserCreateManyInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
 }
 
 export type UserUpdateManyMutationInput = {
@@ -407,6 +498,9 @@ export type UserUpdateManyMutationInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -421,6 +515,9 @@ export type UserUncheckedUpdateManyInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -435,6 +532,14 @@ export type UserCountOrderByAggregateInput = {
   banned?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
   banExpires?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -449,6 +554,9 @@ export type UserMaxOrderByAggregateInput = {
   banned?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
   banExpires?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
+  title?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -463,6 +571,14 @@ export type UserMinOrderByAggregateInput = {
   banned?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
   banExpires?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  level?: Prisma.SortOrder
+  xp?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -492,6 +608,18 @@ export type NullableBoolFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type EnumUserTitleFieldUpdateOperationsInput = {
+  set?: $Enums.UserTitle
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -562,6 +690,9 @@ export type UserCreateWithoutSessionsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
@@ -579,6 +710,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
@@ -612,6 +746,9 @@ export type UserUpdateWithoutSessionsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
@@ -629,6 +766,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
@@ -646,6 +786,9 @@ export type UserCreateWithoutAccountsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
@@ -663,6 +806,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
@@ -696,6 +842,9 @@ export type UserUpdateWithoutAccountsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
@@ -713,6 +862,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
@@ -730,6 +882,9 @@ export type UserCreateWithoutEventsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
@@ -747,6 +902,9 @@ export type UserUncheckedCreateWithoutEventsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
@@ -780,6 +938,9 @@ export type UserUpdateWithoutEventsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
@@ -797,6 +958,9 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
@@ -814,6 +978,9 @@ export type UserCreateWithoutEventAttendeesInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   events?: Prisma.EventCreateNestedManyWithoutCreatedByInput
@@ -831,6 +998,9 @@ export type UserUncheckedCreateWithoutEventAttendeesInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  level?: number
+  xp?: number
+  title?: $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutCreatedByInput
@@ -864,6 +1034,9 @@ export type UserUpdateWithoutEventAttendeesInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUpdateManyWithoutCreatedByNestedInput
@@ -881,6 +1054,9 @@ export type UserUncheckedUpdateWithoutEventAttendeesInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  xp?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.EnumUserTitleFieldUpdateOperationsInput | $Enums.UserTitle
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -956,6 +1132,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  level?: boolean
+  xp?: boolean
+  title?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
@@ -975,6 +1154,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  level?: boolean
+  xp?: boolean
+  title?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -989,6 +1171,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  level?: boolean
+  xp?: boolean
+  title?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1003,9 +1188,12 @@ export type UserSelectScalar = {
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  level?: boolean
+  xp?: boolean
+  title?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "role" | "banned" | "banReason" | "banExpires", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "role" | "banned" | "banReason" | "banExpires" | "level" | "xp" | "title", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1036,6 +1224,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     banned: boolean | null
     banReason: string | null
     banExpires: Date | null
+    level: number
+    xp: number
+    title: $Enums.UserTitle
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1474,6 +1665,9 @@ export interface UserFieldRefs {
   readonly banned: Prisma.FieldRef<"User", 'Boolean'>
   readonly banReason: Prisma.FieldRef<"User", 'String'>
   readonly banExpires: Prisma.FieldRef<"User", 'DateTime'>
+  readonly level: Prisma.FieldRef<"User", 'Int'>
+  readonly xp: Prisma.FieldRef<"User", 'Int'>
+  readonly title: Prisma.FieldRef<"User", 'UserTitle'>
 }
     
 

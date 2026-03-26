@@ -9,6 +9,17 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserTitle = {
+  ROOKIE: 'ROOKIE',
+  APPRENTICE: 'APPRENTICE',
+  NINJA: 'NINJA',
+  ARCHITECT: 'ARCHITECT',
+  WIZARD: 'WIZARD'
+} as const
+
+export type UserTitle = (typeof UserTitle)[keyof typeof UserTitle]
+
+
 export const EventStatus = {
   DRAFT: 'DRAFT',
   REVIEW: 'REVIEW',
