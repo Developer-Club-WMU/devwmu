@@ -13,4 +13,5 @@ count.txt
 __unconfig*
 todos.json
 
-*.db
+prisma/*.db
+generated
