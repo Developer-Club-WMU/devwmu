@@ -1,0 +1,35 @@
+services:
+  web:
+    restart: unless-stopped
+    build: .
+    container_name: webdev-landing-dev
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+    secrets:
+      - db_url
+      - better_auth_secret
+      - better_auth_url
+      - google_client_id
+      - google_client_secret
+    networks:
+      - devnet
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+networks:
+  devnet:
+    external: true
+
+secrets:
+  db_url:
+    file: ./secrets/db_url.txt
+  better_auth_secret:
+    file: ./secrets/better_auth_secret.txt
+  better_auth_url:
+    file: ./secrets/better_auth_url.txt
+  google_client_id:
+    file: ./secrets/google_client_id.txt
+  google_client_secret:
+    file: ./secrets/google_client_secret.txt

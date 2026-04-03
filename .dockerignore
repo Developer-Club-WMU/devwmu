@@ -1,0 +1,13 @@
+node_modules
+.next
+.output
+.env
+.env.*
+secrets/
+prisma/migrations
+*.log
+.git
+.gitignore
+dist
+coverage
+.turbo
