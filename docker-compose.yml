@@ -1,8 +1,8 @@
 services:
   web:
     restart: unless-stopped
-    build: .
-    container_name: webdev-landing-dev
+    image: devclubwmu/devclub-prod-v2:latest
+    container_name: webdev-v2-prod
     ports:
       - '3000:3000'
     environment:

@@ -75,14 +75,14 @@ export const navigationConfig: NavigationConfig = {
       },
       {
         title: 'Join Discord',
-        href: 'https://discord.com/invite/q9gk2MasBC',
+        href: 'https://discord.com/invite/G9yE5s6NFM',
         external: true,
       },
     ],
     social: [
       {
         title: 'Discord',
-        href: 'https://discord.com/invite/q9gk2MasBC',
+        href: 'https://discord.com/invite/G9yE5s6NFM',
         icon: FaDiscord,
         external: true,
       },
