@@ -203,12 +203,18 @@ function Dashboard() {
                           size="sm"
                           variant={isGoing ? 'secondary' : 'default'}
                           className="h-8 rounded-lg font-bold text-xs uppercase transition-all"
-                          onClick={() => toggleRSVP({ eventId: event.id, status: !isGoing })}
+                          onClick={() =>
+                            toggleRSVP({ eventId: event.id, status: !isGoing })
+                          }
                         >
                           {isGoing ? (
-                            <><Check className="w-3 h-3 mr-1" /> Going</>
+                            <>
+                              <Check className="w-3 h-3 mr-1" /> Going
+                            </>
                           ) : (
-                            <><UserPlus className="w-3 h-3 mr-1" /> Join</>
+                            <>
+                              <UserPlus className="w-3 h-3 mr-1" /> Join
+                            </>
                           )}
                         </Button>
                       </div>
@@ -223,10 +229,12 @@ function Dashboard() {
                           {format(new Date(event.startTime), 'h:mm a')}
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <MapPin className="w-4 h-4" /> {event.location || 'TBA'}
+                          <MapPin className="w-4 h-4" />{' '}
+                          {event.location || 'TBA'}
                         </div>
                         <div className="flex items-center gap-1.5 text-primary/70">
-                          <Users className="w-4 h-4" /> {event._count?.attendees || 0} attending
+                          <Users className="w-4 h-4" />{' '}
+                          {event._count?.attendees || 0} attending
                         </div>
                       </div>
                     </CardContent>
@@ -268,7 +276,9 @@ function Dashboard() {
                     Level {user?.level || 1}
                   </div>
                   <div className="text-xs uppercase font-bold tracking-widest opacity-80">
-                    {user?.title ? (TITLE_MAP[user.title] || user.title) : 'Rookie Developer'}
+                    {user?.title
+                      ? TITLE_MAP[user.title] || user.title
+                      : 'Rookie Developer'}
                   </div>
                 </div>
               </div>
