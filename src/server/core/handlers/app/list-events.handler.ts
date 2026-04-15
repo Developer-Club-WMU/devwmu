@@ -12,5 +12,13 @@ export const listEventsFn = createServerFn()
     })
 
     const runnable = program.pipe(Effect.provide(EventServiceLayer))
-    return Effect.runPromise(runnable)
+    try {
+      const result = await Effect.runPromise(runnable)
+      return { ok: true as const, data: result }
+    } catch (error: any) {
+      return { ok: false as const, error: error?.message || 'Unknown error' }
+    }
   })
+
+export type ListEventsFnShape = Awaited<ReturnType<typeof listEventsFn>>
+export type ListEventsFnData = Extract<ListEventsFnShape, { ok: true }>['data']

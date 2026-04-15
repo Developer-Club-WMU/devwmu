@@ -22,6 +22,7 @@ import { Route as AppEventsIndexRouteImport } from './routes/app/events/index'
 import { Route as PublicSignInIndexRouteImport } from './routes/_public/sign-in/index'
 import { Route as PublicEventsIndexRouteImport } from './routes/_public/events/index'
 import { Route as PublicAboutIndexRouteImport } from './routes/_public/about/index'
+import { Route as AppMembersUserIdRouteImport } from './routes/app/members/$userId'
 import { Route as AppEventsCreateRouteImport } from './routes/app/events/create'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as PublicEventsEventIdRouteImport } from './routes/_public/events/$eventId'
@@ -92,6 +93,11 @@ const PublicAboutIndexRoute = PublicAboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const AppMembersUserIdRoute = AppMembersUserIdRouteImport.update({
+  id: '/members/$userId',
+  path: '/members/$userId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppEventsCreateRoute = AppEventsCreateRouteImport.update({
   id: '/events/create',
   path: '/events/create',
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/app/members/$userId': typeof AppMembersUserIdRoute
   '/about/': typeof PublicAboutIndexRoute
   '/events/': typeof PublicEventsIndexRoute
   '/sign-in/': typeof PublicSignInIndexRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/app/members/$userId': typeof AppMembersUserIdRoute
   '/about': typeof PublicAboutIndexRoute
   '/events': typeof PublicEventsIndexRoute
   '/sign-in': typeof PublicSignInIndexRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/_public/events/$eventId': typeof PublicEventsEventIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/events/create': typeof AppEventsCreateRoute
+  '/app/members/$userId': typeof AppMembersUserIdRoute
   '/_public/about/': typeof PublicAboutIndexRoute
   '/_public/events/': typeof PublicEventsIndexRoute
   '/_public/sign-in/': typeof PublicSignInIndexRoute
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/api/auth/$'
     | '/app/events/create'
+    | '/app/members/$userId'
     | '/about/'
     | '/events/'
     | '/sign-in/'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/api/auth/$'
     | '/app/events/create'
+    | '/app/members/$userId'
     | '/about'
     | '/events'
     | '/sign-in'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/_public/events/$eventId'
     | '/api/auth/$'
     | '/app/events/create'
+    | '/app/members/$userId'
     | '/_public/about/'
     | '/_public/events/'
     | '/_public/sign-in/'
@@ -337,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/app/members/$userId': {
+      id: '/app/members/$userId'
+      path: '/members/$userId'
+      fullPath: '/app/members/$userId'
+      preLoaderRoute: typeof AppMembersUserIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/events/create': {
       id: '/app/events/create'
       path: '/events/create'
@@ -398,6 +417,7 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppEventsCreateRoute: typeof AppEventsCreateRoute
+  AppMembersUserIdRoute: typeof AppMembersUserIdRoute
   AppEventsIndexRoute: typeof AppEventsIndexRoute
   AppMembersIndexRoute: typeof AppMembersIndexRoute
   AppEventsEventIdIndexRoute: typeof AppEventsEventIdIndexRoute
@@ -407,6 +427,7 @@ interface AppRouteRouteChildren {
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppEventsCreateRoute: AppEventsCreateRoute,
+  AppMembersUserIdRoute: AppMembersUserIdRoute,
   AppEventsIndexRoute: AppEventsIndexRoute,
   AppMembersIndexRoute: AppMembersIndexRoute,
   AppEventsEventIdIndexRoute: AppEventsEventIdIndexRoute,

@@ -96,5 +96,13 @@ export const upsertEventFn = createServerFn()
      * runPromise should ONLY be called
      * at the outermost boundary (like a server handler).
      */
-    return Effect.runPromise(runnable)
+    try {
+      const result = await Effect.runPromise(runnable)
+      return { ok: true as const, data: result }
+    } catch (error: any) {
+      return { ok: false as const, error: error?.message || 'Unknown error' }
+    }
   })
+
+export type UpsertEventFnShape = Awaited<ReturnType<typeof upsertEventFn>>
+export type UpsertEventFnData = Extract<UpsertEventFnShape, { ok: true }>['data']

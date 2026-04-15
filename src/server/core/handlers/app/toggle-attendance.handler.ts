@@ -31,5 +31,13 @@ export const toggleAttendanceFn = createServerFn()
 
     const combinedLayer = Layer.merge(EventServiceLayer, ProgressionServiceLayer)
     const runnable = program.pipe(Effect.provide(combinedLayer))
-    return Effect.runPromise(runnable)
+    try {
+      const result = await Effect.runPromise(runnable)
+      return { ok: true as const, data: result }
+    } catch (error: any) {
+      return { ok: false as const, error: error?.message || 'Unknown error' }
+    }
   })
+
+export type ToggleAttendanceFnShape = Awaited<ReturnType<typeof toggleAttendanceFn>>
+export type ToggleAttendanceFnData = Extract<ToggleAttendanceFnShape, { ok: true }>['data']

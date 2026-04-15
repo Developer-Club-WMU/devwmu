@@ -49,7 +49,7 @@ function EventDetailsPage() {
   const { eventId } = Route.useParams()
   const queryClient = useQueryClient()
 
-  const { data: event, isLoading, error } = useQuery({
+  const { data: response, isLoading } = useQuery({
     queryKey: ['events', eventId],
     queryFn: () => getEventFn({ data: eventId }),
   })
@@ -57,9 +57,13 @@ function EventDetailsPage() {
   const { mutate: toggleAttendance } = useMutation({
     mutationFn: (args: { attendeeId: string; attended: boolean }) =>
       toggleAttendanceFn({ data: args }),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['events', eventId] })
-      toast.success(variables.attended ? 'Member marked as attended' : 'Attendance record removed')
+    onSuccess: (res: any, variables) => {
+      if (res.ok) {
+        queryClient.invalidateQueries({ queryKey: ['events', eventId] })
+        toast.success(variables.attended ? 'Member marked as attended' : 'Attendance record removed')
+      } else {
+        toast.error('Failed to update attendance: ' + res.error)
+      }
     },
     onError: (err: any) => {
       toast.error('Failed to update attendance: ' + err.message)
@@ -70,12 +74,16 @@ function EventDetailsPage() {
     return <div className="p-8 animate-pulse text-muted-foreground">Loading event details...</div>
   }
 
-  if (error || !event) {
+  const event = response?.ok ? response.data : null
+
+  if (!event) {
     return (
       <div className="p-8 text-center text-destructive bg-destructive/10 rounded-xl m-6">
         <XCircle className="w-12 h-12 mx-auto mb-4" />
         <h2 className="text-xl font-bold uppercase">Event Not Found</h2>
-        <p className="mt-2 text-sm opacity-80 font-medium">This event may have been deleted or is inaccessible.</p>
+        <p className="mt-2 text-sm opacity-80 font-medium">
+          {response?.ok === false ? response.error : 'This event may have been deleted or is inaccessible.'}
+        </p>
         <Link to="/app/events">
           <Button variant="outline" className="mt-6">Back to Events</Button>
         </Link>

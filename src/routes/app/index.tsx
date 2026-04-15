@@ -1,7 +1,10 @@
-import { assertOfficerFn } from '@/server/helpers/route-protection'
+import { assertAuthenticatedFn } from '@/server/helpers/route-protection'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { listEventsFn } from '@/server/core/handlers/app/list-events.handler'
+import { 
+  listEventsFn, 
+  type ListEventsFnData 
+} from '@/server/core/handlers/app/list-events.handler'
 import { rsvpEventFn } from '@/server/core/handlers/app/rsvp-event.handler'
 import { authClient } from '@/lib/auth-client'
 import {
@@ -30,7 +33,7 @@ import { toast } from 'sonner'
 
 export const Route = createFileRoute('/app/')({
   component: Dashboard,
-  beforeLoad: () => assertOfficerFn(),
+  beforeLoad: () => assertAuthenticatedFn(),
 })
 
 const TITLE_MAP: Record<string, string> = {
@@ -46,7 +49,7 @@ function Dashboard() {
   const queryClient = useQueryClient()
   const user = session?.user as any
 
-  const { data: events, isLoading } = useQuery({
+  const { data: response, isLoading } = useQuery({
     queryKey: ['events', user?.id],
     queryFn: () => listEventsFn({ data: { userId: user?.id } }),
     enabled: !!user?.id,
@@ -55,9 +58,13 @@ function Dashboard() {
   const { mutate: toggleRSVP } = useMutation({
     mutationFn: (args: { eventId: string; status: boolean }) =>
       rsvpEventFn({ data: { ...args, userId: user?.id } }),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['events'] })
-      toast.success(variables.status ? 'See you there!' : 'RSVP removed')
+    onSuccess: (res: any, variables) => {
+      if (res.ok) {
+        queryClient.invalidateQueries({ queryKey: ['events'] })
+        toast.success(variables.status ? 'See you there!' : 'RSVP removed')
+      } else {
+        toast.error('Failed to update RSVP: ' + res.error)
+      }
     },
     onError: (err: any) => {
       toast.error('Failed to update RSVP: ' + err.message)
@@ -65,6 +72,7 @@ function Dashboard() {
   })
 
   // Handle Event Categorization
+  const events: ListEventsFnData = response?.ok ? response.data : []
   const now = new Date()
   const ongoing =
     events?.filter((e: any) => {
@@ -84,6 +92,14 @@ function Dashboard() {
           new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
       )
       .slice(0, 5) || []
+
+  const attended =
+    events
+      ?.filter((e: any) => e.attendees?.some((a: any) => a.attended))
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),
+      ) || []
 
   if (isLoading) {
     return (
@@ -119,7 +135,7 @@ function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Feed: Events */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-12">
           {/* Ongoing Events */}
           {ongoing.length > 0 && (
             <section>
@@ -170,6 +186,57 @@ function Dashboard() {
               </div>
             </section>
           )}
+
+          {/* Attended Events (History) */}
+          <section>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2">
+                <Check className="w-6 h-6 text-emerald-500" />
+                Attendance History
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              {attended.map((event: any) => (
+                <Card
+                  key={event.id}
+                  className="hover:border-primary/50 transition-all duration-300 group overflow-hidden"
+                >
+                  <CardContent className="p-0">
+                    <div className="flex items-center p-5 gap-6">
+                        <div className="hidden md:flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl min-w-[80px]">
+                            <span className="text-[10px] font-black uppercase text-muted-foreground">{format(new Date(event.startTime), 'MMM')}</span>
+                            <span className="text-xl font-black">{format(new Date(event.startTime), 'dd')}</span>
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="text-lg font-bold group-hover:text-primary transition-colors">{event.title}</h3>
+                            <div className="flex gap-4 text-xs font-medium text-muted-foreground mt-1">
+                                <div className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {event.location || 'TBA'}</div>
+                                <div className="flex items-center gap-1"><Clock className="w-3 h-3" /> {format(new Date(event.startTime), 'h:mm a')}</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 font-black text-[10px] uppercase">
+                                Attended
+                            </Badge>
+                            <Link to="/app/events/$eventId" params={{ eventId: event.id }}>
+                                <Button variant="ghost" size="icon">
+                                    <ChevronRight className="w-4 h-4" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+
+              {attended.length === 0 && (
+                <div className="p-12 text-center border-2 border-dashed rounded-xl text-muted-foreground font-medium">
+                  You haven't attended any events yet.
+                </div>
+              )}
+            </div>
+          </section>
 
           {/* Upcoming Events */}
           <section>

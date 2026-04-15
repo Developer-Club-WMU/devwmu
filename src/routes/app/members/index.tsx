@@ -1,5 +1,5 @@
 import { assertOfficerFn } from '@/server/helpers/route-protection'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { authClient } from '@/lib/auth-client'
 import {
@@ -92,8 +92,12 @@ function MembersPage() {
     columnHelper.accessor('name', {
       header: 'Member',
       cell: (info) => (
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary border border-primary/20">
+        <Link 
+          to="/app/members/$userId" 
+          params={{ userId: info.row.original.id }}
+          className="flex items-center gap-3 hover:text-primary transition-colors group"
+        >
+          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary border border-primary/20 group-hover:scale-105 transition-transform">
             {info.getValue()?.charAt(0).toUpperCase()}
           </div>
           <div className="flex flex-col">
@@ -104,7 +108,7 @@ function MembersPage() {
               <Mail className="w-3 h-3" /> {info.row.original.email}
             </span>
           </div>
-        </div>
+        </Link>
       ),
     }),
     columnHelper.accessor('role', {
@@ -151,10 +155,12 @@ function MembersPage() {
     }),
     columnHelper.display({
       id: 'actions',
-      cell: () => (
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <MoreVertical className="w-4 h-4 text-muted-foreground" />
-        </Button>
+      cell: (info) => (
+        <Link to="/app/members/$userId" params={{ userId: info.row.original.id }}>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <MoreVertical className="w-4 h-4 text-muted-foreground" />
+          </Button>
+        </Link>
       ),
     }),
   ]

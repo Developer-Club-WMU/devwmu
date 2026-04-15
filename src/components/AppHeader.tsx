@@ -3,15 +3,19 @@ import { Terminal, Settings, User } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 import { navigationConfig } from '@/config/navigation'
 import { Button } from './ui/button'
+import { authClient } from '@/lib/auth-client'
 
 export function AppHeader() {
+  const { data: session } = authClient.useSession()
+  const isAdmin = session?.user?.role === 'admin'
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center gap-4 px-4 md:px-6 max-w-7xl mx-auto">
         <Link to="/app" className="flex items-center gap-2 mr-6">
           <Terminal className="h-6 w-6" />
           <span className="font-bold hidden md:inline-block">
-            Officer Dashboard
+            {isAdmin ? 'Officer' : 'Member'} Dashboard
           </span>
         </Link>
 

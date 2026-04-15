@@ -38,10 +38,12 @@ function getStatusBadgeVariant(status: EventStatus) {
 }
 
 function EventsTablePage() {
-  const { data: events, isLoading } = useQuery({
+  const { data: response, isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => listEventsFn(),
   })
+
+  const events = response?.ok ? response.data : []
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
@@ -79,7 +81,16 @@ function EventsTablePage() {
                   Loading events...
                 </TableCell>
               </TableRow>
-            ) : events?.length === 0 ? (
+            ) : response?.ok === false ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="text-center h-24 text-destructive font-medium"
+                  >
+                    Error: {response.error}
+                  </TableCell>
+                </TableRow>
+            ) : events.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={6}
@@ -89,7 +100,7 @@ function EventsTablePage() {
                 </TableCell>
               </TableRow>
             ) : (
-              events?.map((event: any) => (
+              events.map((event: any) => (
                 <TableRow key={event.id}>
                   <TableCell className="font-medium">{event.title}</TableCell>
                   <TableCell>

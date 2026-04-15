@@ -18,5 +18,13 @@ export const rsvpEventFn = createServerFn()
     })
 
     const runnable = program.pipe(Effect.provide(EventServiceLayer))
-    return Effect.runPromise(runnable)
+    try {
+      const result = await Effect.runPromise(runnable)
+      return { ok: true as const, data: result }
+    } catch (error: any) {
+      return { ok: false as const, error: error?.message || 'Unknown error' }
+    }
   })
+
+export type RSVPEventFnShape = Awaited<ReturnType<typeof rsvpEventFn>>
+export type RSVPEventFnData = Extract<RSVPEventFnShape, { ok: true }>['data']
