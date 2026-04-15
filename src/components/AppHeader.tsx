@@ -8,11 +8,14 @@ import { authClient } from '@/lib/auth-client'
 export function AppHeader() {
   const { data: session } = authClient.useSession()
   const isAdmin = session?.user?.role === 'admin'
+  const mainNav = isAdmin
+    ? navigationConfig.app.mainNav
+    : navigationConfig.member.mainNav
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center gap-4 px-4 md:px-6 max-w-7xl mx-auto">
-        <Link to="/app" className="flex items-center gap-2 mr-6">
+        <Link to={isAdmin ? '/app' : '/member'} className="flex items-center gap-2 mr-6">
           <Terminal className="h-6 w-6" />
           <span className="font-bold hidden md:inline-block">
             {isAdmin ? 'Officer' : 'Member'} Dashboard
@@ -20,7 +23,7 @@ export function AppHeader() {
         </Link>
 
         <nav className="flex-1 flex items-center gap-6 text-sm font-medium">
-          {navigationConfig.app.mainNav.map((item, index) => (
+          {mainNav.map((item, index) => (
             <Link
               key={index}
               to={item.href}

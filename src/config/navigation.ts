@@ -23,6 +23,9 @@ export interface NavigationConfig {
   app: {
     mainNav: NavItem[]
   }
+  member: {
+    mainNav: NavItem[]
+  }
 }
 
 export const navigationConfig: NavigationConfig = {
@@ -109,6 +112,14 @@ export const navigationConfig: NavigationConfig = {
       {
         title: 'Events',
         href: '/app/events',
+      },
+    ],
+  },
+  member: {
+    mainNav: [
+      {
+        title: 'Dashboard',
+        href: '/member',
       },
     ],
   },
