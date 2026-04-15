@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { 
-  getMemberProfileFn, 
-  type GetMemberProfileFnData 
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  getMemberProfileFn,
+  type GetMemberProfileFnData
 } from '@/server/core/handlers/app/get-member-profile.handler'
 import {
   Card,
@@ -10,27 +10,43 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { 
-  Trophy, 
-  Calendar, 
-  MapPin, 
-  Clock, 
+import {
+  Trophy,
+  Calendar,
+  MapPin,
+  Clock,
   ChevronLeft,
   Mail,
   Zap,
   Target,
   Award,
   History,
-  AlertCircle
+  AlertCircle,
+  ShieldCheck,
+  ShieldX,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { assertAuthenticatedFn } from '@/server/helpers/route-protection'
+import { assertOfficerFn } from '@/server/helpers/route-protection'
+import { authClient } from '@/lib/auth-client'
+import { toast } from 'sonner'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/app/members/$userId')({
   component: MemberProfilePage,
-  beforeLoad: () => assertAuthenticatedFn(),
+  beforeLoad: () => assertOfficerFn(),
 })
 
 const TITLE_MAP: Record<string, string> = {
@@ -43,11 +59,30 @@ const TITLE_MAP: Record<string, string> = {
 
 function MemberProfilePage() {
   const { userId } = Route.useParams()
+  const queryClient = useQueryClient()
+  const [roleLoading, setRoleLoading] = useState(false)
 
   const { data: memberResponse, isLoading } = useQuery({
     queryKey: ['members', userId],
     queryFn: () => getMemberProfileFn({ data: userId }),
   })
+
+  async function handleSetRole(newRole: 'admin' | 'user') {
+    setRoleLoading(true)
+    const { error } = await authClient.admin.setRole({ userId, role: newRole })
+    setRoleLoading(false)
+    if (error) {
+      toast.error(`Failed to update role: ${error.message}`)
+    } else {
+      const name = memberResponse?.ok ? memberResponse.data.name : 'Member'
+      toast.success(
+        newRole === 'admin'
+          ? `${name} is now an officer.`
+          : `${name} has been demoted to member.`,
+      )
+      queryClient.invalidateQueries({ queryKey: ['members', userId] })
+    }
+  }
 
   if (isLoading) {
     return (
@@ -125,6 +160,71 @@ function MemberProfilePage() {
                 <Badge variant="secondary" className="mt-4 uppercase text-[10px] font-black tracking-[0.2em] px-3 py-1 bg-primary/5 text-primary border-primary/10">
                   {member.role || 'MEMBER'}
                 </Badge>
+
+                <div className="mt-4 w-full">
+                  {member.role === 'admin' ? (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          disabled={roleLoading}
+                        >
+                          <ShieldX className="w-4 h-4" />
+                          Revoke Officer Role
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Revoke officer role?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {member.name} will lose all officer privileges and be
+                            demoted to a regular member. This can be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-destructive hover:bg-destructive/90"
+                            onClick={() => handleSetRole('user')}
+                          >
+                            Revoke
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  ) : (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full gap-2"
+                          disabled={roleLoading}
+                        >
+                          <ShieldCheck className="w-4 h-4" />
+                          Make Officer
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Promote to officer?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {member.name} will gain full officer privileges,
+                            including managing events and members. This can be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleSetRole('admin')}>
+                            Promote
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mt-2">

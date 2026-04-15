@@ -58,7 +58,7 @@ function PublicEventsPage() {
 
   const { ongoing, upcoming, past } = data
 
-  const renderEventCard = (event: any, isUpcoming = false) => {
+  const renderEventCard = (event: any, isUpcoming = false, isOngoing = false) => {
     const isGoing = event.attendees?.length > 0
 
     return (
@@ -89,7 +89,7 @@ function PublicEventsPage() {
           )}
         </Link>
 
-        {isUpcoming && (
+        {(isUpcoming || isOngoing) && (
           <CardFooter className="relative z-10 pt-0 pb-6 px-6 flex justify-between items-center mt-auto">
             <div className="flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-widest">
               <Users className="w-4 h-4 text-public-accent/70" />
@@ -165,7 +165,7 @@ function PublicEventsPage() {
               </div>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {ongoing.map(e => renderEventCard(e))}
+              {ongoing.map(e => renderEventCard(e, false, true))}
             </div>
           </div>
         )}
