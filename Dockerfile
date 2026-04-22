@@ -5,7 +5,7 @@ RUN corepack enable && corepack prepare pnpm --activate
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma
 ENV SKIP_ENV_VALIDATION=1
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm prisma generate
 COPY . .
 RUN pnpm build
