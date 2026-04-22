@@ -1,11 +1,14 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getPublicEventByIdFn } from '@/server/core/handlers/public/get-public-event-by-id.handler'
+import { rsvpEventFn } from '@/server/core/handlers/app/rsvp-event.handler'
+import { authClient } from '@/lib/auth-client'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
 import { format } from 'date-fns'
-import { ArrowLeft, Calendar, MapPin } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, UserPlus, Check, Users } from 'lucide-react'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_public/events/$eventId')({
   component: PublicEventDetailsPage,
@@ -13,10 +16,24 @@ export const Route = createFileRoute('/_public/events/$eventId')({
 
 function PublicEventDetailsPage() {
   const { eventId } = Route.useParams()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { data: session } = authClient.useSession()
+  const userId = session?.user?.id
 
   const { data: event, isLoading, error } = useQuery({
-    queryKey: ['public-event', eventId],
-    queryFn: () => getPublicEventByIdFn({ data: eventId }),
+    queryKey: ['public-event', eventId, userId],
+    queryFn: () => getPublicEventByIdFn({ data: { id: eventId, userId } }),
+  })
+
+  const { mutate: toggleRSVP, isPending: isRsvpPending } = useMutation({
+    mutationFn: (args: { eventId: string; status: boolean }) =>
+      rsvpEventFn({ data: { ...args, userId: userId! } }),
+    onSuccess: (_, variables) => {
+      toast.success(variables.status ? 'See you there!' : 'RSVP removed')
+      queryClient.invalidateQueries({ queryKey: ['public-event', eventId] })
+    },
+    onError: (err: any) => toast.error('Failed to update RSVP: ' + err.message),
   })
 
   if (isLoading) {
@@ -49,15 +66,15 @@ function PublicEventDetailsPage() {
         <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6">
           {event.title}
         </h1>
-        
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-slate-400 font-medium">
+
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-slate-400 font-medium mb-8">
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5 text-public-accent" />
             <span className="text-slate-300">
               {format(new Date(event.startTime), 'EEEE, MMMM do yyyy - h:mm a')}
             </span>
           </div>
-          
+
           {event.location && (
             <div className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-public-accent" />
@@ -67,6 +84,41 @@ function PublicEventDetailsPage() {
             </div>
           )}
         </div>
+
+        {new Date() <= new Date(event.endTime) && (() => {
+          const isGoing = (event as any).attendees?.length > 0
+          return (
+            <div className="flex items-center gap-6">
+              <button
+                className={`inline-flex items-center gap-2 px-6 py-3 font-black uppercase text-[11px] tracking-[0.2em] transition-all border ${
+                  isGoing
+                    ? 'bg-transparent text-public-accent border-public-accent hover:bg-public-accent/10'
+                    : 'bg-public-accent text-public-bg border-public-accent hover:bg-white'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                disabled={isRsvpPending}
+                onClick={() => {
+                  if (!userId) {
+                    navigate({ to: '/sign-in' })
+                    return
+                  }
+                  toggleRSVP({ eventId: event.id, status: !isGoing })
+                }}
+              >
+                {isGoing ? (
+                  <><Check className="w-3.5 h-3.5" /> Going</>
+                ) : (
+                  <><UserPlus className="w-3.5 h-3.5" /> RSVP</>
+                )}
+              </button>
+              {(event as any)._count?.attendees != null && (
+                <span className="flex items-center gap-1.5 text-slate-500 font-bold text-xs uppercase tracking-widest">
+                  <Users className="w-4 h-4 text-public-accent/70" />
+                  {(event as any)._count.attendees} Attending
+                </span>
+              )}
+            </div>
+          )
+        })()}
       </div>
 
       <div className="mt-8">
