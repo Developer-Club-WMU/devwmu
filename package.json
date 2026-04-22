@@ -95,6 +95,7 @@
       "better-sqlite3",
       "prisma",
       "@prisma/engines",
+      "@prisma/client",
       "esbuild",
       "unrs-resolver"
     ]
