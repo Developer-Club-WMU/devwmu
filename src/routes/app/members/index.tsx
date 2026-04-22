@@ -1,7 +1,10 @@
 import { assertOfficerFn } from '@/server/helpers/route-protection'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { authClient } from '@/lib/auth-client'
+import {
+  listMembersFn,
+  type ListMembersFnData,
+} from '@/server/core/handlers/app/list-members.handler'
 import {
   Users,
   Search,
@@ -46,21 +49,9 @@ export const Route = createFileRoute('/app/members/')({
   beforeLoad: () => assertOfficerFn(),
 })
 
-type User = {
-  id: string
-  name: string
-  email: string
-  emailVerified: boolean
-  image?: string | null
-  createdAt: Date
-  updatedAt: Date
-  role?: string | null
-  banned?: boolean | null
-  banReason?: string | null
-  banExpires?: Date | null
-}
+type Member = ListMembersFnData['members'][number]
 
-const columnHelper = createColumnHelper<User>()
+const columnHelper = createColumnHelper<Member>()
 
 function MembersPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -68,32 +59,26 @@ function MembersPage() {
   const pageSize = 10
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin-users', searchTerm, page],
+    queryKey: ['admin-members', searchTerm, page, pageSize],
     queryFn: async () => {
-      const response = await authClient.admin.listUsers({
-        query: {
-          searchValue: searchTerm,
-          searchField: 'name',
-          searchOperator: 'contains',
-          limit: pageSize,
-          offset: page * pageSize,
-          sortBy: 'createdAt',
-          sortDirection: 'desc',
-        },
+      const response = await listMembersFn({
+        data: { searchTerm, page, pageSize },
       })
-      if (response.error) throw response.error
+      if (!response.ok) throw new Error(response.error)
       return response.data
     },
   })
 
-  const users = data?.users || []
+  const users = data?.members || []
+  const totalMembers = data?.total || 0
+  const totalPages = Math.max(1, Math.ceil(totalMembers / pageSize))
 
   const columns = [
     columnHelper.accessor('name', {
       header: 'Member',
       cell: (info) => (
-        <Link 
-          to="/app/members/$userId" 
+        <Link
+          to="/app/members/$userId"
           params={{ userId: info.row.original.id }}
           className="flex items-center gap-3 hover:text-primary transition-colors group"
         >
@@ -109,6 +94,14 @@ function MembersPage() {
             </span>
           </div>
         </Link>
+      ),
+    }),
+    columnHelper.accessor('attendanceCount', {
+      header: 'Attended',
+      cell: (info) => (
+        <div className="font-black text-sm tracking-tight">
+          {info.getValue()}
+        </div>
       ),
     }),
     columnHelper.accessor('role', {
@@ -156,7 +149,10 @@ function MembersPage() {
     columnHelper.display({
       id: 'actions',
       cell: (info) => (
-        <Link to="/app/members/$userId" params={{ userId: info.row.original.id }}>
+        <Link
+          to="/app/members/$userId"
+          params={{ userId: info.row.original.id }}
+        >
           <Button variant="ghost" size="icon" className="h-8 w-8">
             <MoreVertical className="w-4 h-4 text-muted-foreground" />
           </Button>
@@ -166,7 +162,7 @@ function MembersPage() {
   ]
 
   const table = useReactTable({
-    data: users as User[],
+    data: users,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
@@ -213,7 +209,7 @@ function MembersPage() {
             <div>
               <CardTitle className="text-xl font-bold">Total Members</CardTitle>
               <CardDescription className="italic font-medium">
-                Viewing {users.length} registered users
+                Viewing {users.length} of {totalMembers} registered users
               </CardDescription>
             </div>
           </div>
@@ -295,7 +291,7 @@ function MembersPage() {
         {/* Pagination bar */}
         <div className="p-4 border-t border-muted/50 bg-muted/5 flex items-center justify-between gap-4">
           <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            Page {page + 1}
+            Page {page + 1} of {totalPages}
           </div>
           <div className="flex gap-2">
             <Button
@@ -310,7 +306,7 @@ function MembersPage() {
             <Button
               variant="outline"
               size="sm"
-              disabled={users.length < pageSize}
+              disabled={(page + 1) * pageSize >= totalMembers}
               onClick={() => setPage((p) => p + 1)}
               className="h-9 gap-1 font-bold rounded-lg border-muted/50"
             >
